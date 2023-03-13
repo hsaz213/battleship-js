@@ -1,3 +1,9 @@
+/* eslint-disable no-undefined */
+/* eslint-disable no-shadow */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-warning-comments */
+/* eslint-disable no-undef */
+
 let gameTurn = 0;
 let currentPlayer;
 let board;
