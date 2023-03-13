@@ -1,0 +1,52 @@
+A heti feladat egy Battleship game készítése.
+
+Elvárások:
+
+    4x4-es pálya
+    minimum 2 db 1x1-es hajó
+        nem lehetnek egymás mellett, maximum átlósan
+    a játéknak két fázisa van, ezeket nekünk kell beállítani
+        placement phase: ebben a fázisban kell lerakni a hajókat a mezőkre való kattintással
+        shooting phase
+            1. ebben a fázisban kattintással lövünk a másik mezőben lévő hajókra
+            2. AI shoot random helyekre lő a mi táblánkon (akár 2x ugyan oda)
+    ha a hajók elsüllyedtek, a játék véget ér
+    game selection - data.js fileban található
+        itt látszik, hogy az AI hova teszi a hajókat
+        az első három a kötelező
+        function selectGame tartozik hozzá
+    nekünk kell beállítani, hogy az AI nézze, hogy eltalálta-e a hajót??????????
+    2 db globális változóból megoldható a feladat, de 5-nél többet ne használjunk
+    be kell állítani azt, hogy 5x5-ös mezőkön már lehessen nagyobb hajókat lerakni
+        bal klikk: vízszintes
+        jobb klikk: függőleges
+    adatokat validálni kell
+    message-en át lehet kifelé kommunikálni
+
+Feladatkörök:
+
+Pálya
+    4x4-es pálya
+    be kell állítani azt, hogy 5x5-ös mezőkön már lehessen nagyobb hajókat lerakni
+Hajók
+    minimum 2 db 1x1-es hajó
+    nem lehetnek egymás mellett, maximum átlósan
+    be kell állítani azt, hogy 5x5-ös mezőkön már lehessen nagyobb hajókat lerakni
+    bal klikk: vízszintes
+    jobb klikk: függőleges
+    placement phase: ebben a fázisban kell lerakni a hajókat a mezőkre való kattintással
+AI
+    shooting phase: AI shoot random helyekre lő a mi táblánkon (akár 2x ugyan oda)
+    nekünk kell beállítani, hogy az AI nézze, hogy eltalálta-e a hajót
+    ha a hajók elsüllyedtek, a játék véget ér
+Fázisok megállapítása:
+    a játéknak két fázisa van, ezeket nekünk kell beállítani
+        1. placement phase: ebben a fázisban kell lerakni a hajókat a mezőkre való kattintással
+        2. shooting phase
+            ebben a fázisban kattintással lövünk a másik mezőben lévő hajókra
+            AI shoot random helyekre lő a mi táblánkon (akár 2x ugyan oda)
+Game selection
+    game selection - data.js fileban található
+        itt látszik, hogy az AI hova teszi a hajókat
+        az első három a kötelező
+        function selectGame tartozik hozzá
