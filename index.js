@@ -11,7 +11,7 @@ function getSettings(data){
 
   let stepsArray = getStepsByArray(steps)
 
-  generateMap(size)
+  generateMap(size, stepsArray)
 }
 
 function getStepsByArray(array){
@@ -20,22 +20,20 @@ function getStepsByArray(array){
   for(let i = 0; i< array.length; i++){
     let splited = array[i].split(':')[1] // ['s1:a1', 's2:c4'] -> ['s1' ,'a1', 's2', 'c4']
     let data = splited.split('') // ['a1', 'c4'] -> ['a', '1']
-    let key = data[0].charCodeAt(0)-97 // ['a', '1'] -> (a->0, 1)
-    let pos = data[1] // 1, 4
+    let row = data[0].charCodeAt(0)-97 // ['a', '1'] -> (a->0, 1)
+    let column = data[1] // 1, 4
 
-    obj[key+1] = pos
-    /*
-      {
-        1: "1",
-        3: "4" 
-      }
-    */
+    obj[i] = {
+      row: row,
+      column: Number(column)-1,
+    }
   }
   
+  console.log(obj)
   return obj
 }
 
-function generateMap(size){
+function generateMap(size, ships){
   board = []
   ownBoard = []
 
@@ -48,6 +46,11 @@ function generateMap(size){
       if(!ownBoard[i][j]){ownBoard[i][j] = []}
 
       board[i][j] = ""
+
+      for(el in ships){
+        i === ships[el].row && j === ships[el].column ? board[i][j] = 'o' : ''
+      }
+      
       ownBoard[i][j] = ""
     }
   }
