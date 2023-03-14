@@ -38,6 +38,7 @@ function displayBoard(data) {
       cellElement.dataset.y = y;
       cellElement.addEventListener("click", (e) => {
         handleClick({
+          tableNumber: data.boardnumber, // own code
           x: cellElement.dataset.x,
           y: cellElement.dataset.y,
           clickType: "left",
@@ -46,6 +47,7 @@ function displayBoard(data) {
       cellElement.addEventListener("contextmenu", (e) => {
         e.preventDefault();
         handleClick({
+          tableNumber: data.boardnumber, // own code
           x: cellElement.dataset.x,
           y: cellElement.dataset.y,
           clickType: "right",
