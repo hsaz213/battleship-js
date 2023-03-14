@@ -106,12 +106,13 @@ function handleClick(data) {
 
         if (gamePhase.clicks == gamePhase.maxShip) {
           gamePhase.phase = "shooting"
+          console.log("shoot");
         }
       }
     }
   }
   else {
-    if (data.tableNumber === 1) {
+    if (data.tableNumber === 1 && gamePhase.phase == "shooting") {
       playerShoot(data);
     }
   }
@@ -192,9 +193,7 @@ function playerShoot(data) {
       gamePhase.attackTurn = 'ai';
       displayTextMessage('Click the AI shoot button', "black");
     }
-    else if (board[x][y] === 'x') {
-      alert("válassz másik célpontot", x, y);
-    } else {
+    else if(!board[x][y]){
       console.log('belep');
       board[x][y] = 's';
       displayBoard({ boardnumber: 1, board: board });
@@ -211,18 +210,27 @@ function playerShoot(data) {
 function aiShoot(data) {
   const x = data.x.charCodeAt(0) - 65;
   const y = data.y - 1;
-  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
-    //console.log("AI shot at",x,y,"ownBoard element:",ownBoard[x][y]);
-    if (ownBoard[x][y] === "p") {
+  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits<gamePhase.maxShip){
+    
+    console.log("AI shot at",x,y,"ownBoard element:",ownBoard[x][y]);
+    if(ownBoard[x][y] === "p"){
+      console.log("belep")
       gamePhase.aiHits++;
-      ownBoard[x][y] = "x";
-      displayBoard({ boardnumber: 2, board: ownBoard });
-      //console.log("AI hit! Ai hits:",gamePhase.aiHits);
+      ownBoard[x][y]="x";
+      
+      console.log("AI hit! Ai hits:",gamePhase.aiHits);
     }
-    if (gamePhase.aiHits === gamePhase.maxShip) {
-      gamePhase.phase = "end";
-      displayMessage("AI won, AI score:" + gamePhase.aiHits + ", player score:");
+    else if(!ownBoard[x][y]){
+      ownBoard[x][y]="z";    
+    }
+    if(gamePhase.aiHits===gamePhase.maxShip){
+      gamePhase.phase="end";
+      displayMessage("AI won, AI score:"+gamePhase.aiHits+", player score:");
     }
   }
+
+  gamePhase.attackTurn = "player";
+  displayTextMessage(`Player's turn`, "black");
+  displayBoard({ boardnumber: 2, board: ownBoard });
 }
 
