@@ -110,7 +110,6 @@ function handleClick(data) {
   else{
     if(data.tableNumber === 1){
       playerShoot(data)
-      gamePhase.attackTurn = "ai"
     }
   }
   displayBoard({boardnumber: 2,board: ownBoard});
@@ -181,27 +180,43 @@ function playerShoot(data) {
   if (gamePhase.attackTurn === "player" &&
     gamePhase.phase === "shooting" &&
     data.tableNumber === 1) {
-    board[data.x.charCodeAt(0) - 65][data.y] = "s";/*A ascii: 65-->A=0,B=1...*/
-    console.log(data);
+    const x = data.x.charCodeAt(0) - 65;
+    const y = data.y;
+    if (board[x][y] === 'o') {
+      console.log("player találat", x, y);
+      board[x][y] = 'x';
+      displayBoard({ boardnumber: 1, board: board });
+      gamePhase.attackTurn = 'ai';
+      displayTextMessage('Click the AI shoot button', "black");
+    }
+    else if (board[x][y] === 'x') {
+      alert("válassz másik célpontot", x, y);
+    } else {
+      console.log('belep');
+      board[x][y] = 's';
+      displayBoard({ boardnumber: 1, board: board });
+      gamePhase.attackTurn = 'ai';
+      displayTextMessage('Click the AI shoot button', "black");
+    }
+    console.log([x, y]);
     console.log(board);
-
-    displayBoard({ boardnumber: 1, board: board });
-    gamePhase.attackTurn = 'ai';
   }
 }
 
 function aiShoot(data) {
-  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
-    /*const x = data.x.charCodeAt(0) - 65
-    const y = data.y - 1*/
-    const x = 0
-    const y = 0
+  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting") {
+    const x = data.x.charCodeAt(0) - 65;
+    const y = data.y - 1;
 
-    if(ownBoard[x][y]){
-      console.log("talált", x, y)
+    if (ownBoard[x][y] === 'p') {
+      console.log("AI találat", x, y);
+      ownBoard[x][y] = 'x';
+    } else {
+      ownBoard[x][y] = 'z';
     }
+    displayBoard({ boardnumber: 2, board: ownBoard });
+    gamePhase.attackTurn = "player";
+    displayTextMessage(`Player's turn`, "black");
 
-    gamePhase.attackTurn  = "player"
   }
 }
-
