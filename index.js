@@ -192,7 +192,7 @@ function resetGame() {
 }
 
 function aiShoot(data) {
-  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
+  //if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
     
     const x = randomShootx(gamePhase.mapSize)
     const y = randomShooty(gamePhase.mapSize)
@@ -200,11 +200,11 @@ function aiShoot(data) {
     console.log(x, y)
 
     gamePhase.attackTurn = "player"
-  }
+  //}
 }
 
 function randomShootx(num){
-  return Math.floor(Math.random() * num)
+  return Math.floor(Math.random() * num) 
 }
 
 function randomShooty(num){
