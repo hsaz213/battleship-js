@@ -6,7 +6,8 @@ let gamePhase={
   attackTurn: "ai",
   clicks:0,
   level: "",
-  maxShip: 0
+  maxShip: 0,
+  mapSize: 0
 };  /*game phases:
 placement (initial phase):
   ai placement called from selectGame,
@@ -21,6 +22,8 @@ function getSettings(data){
   let steps = ste.join(',')
 
   size = size.split(':')[1] // ['size', '4'] -> 4
+  gamePhase.mapSize = size
+
   //Number(size)? / Int.parse??
   steps = steps.slice(3, -1) // 's:{s1:a1,s2:c4}' -> 's1:a1,s2:c4'
   steps = steps.split(',') // ['s1:a1', 's2:c4']
@@ -116,7 +119,7 @@ function handleClick(data) {
   }
   else{
     if(data.tableNumber === 1){
-      console.log(data)
+      
       gamePhase.attackTurn = "ai"
     }
   }
@@ -191,8 +194,19 @@ function resetGame() {
 function aiShoot(data) {
   if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
     
-    console.log(data)
+    const x = randomShootx(gamePhase.mapSize)
+    const y = randomShooty(gamePhase.mapSize)
+
+    console.log(x, y)
 
     gamePhase.attackTurn = "player"
   }
+}
+
+function randomShootx(num){
+  return Math.floor(Math.random() * num)
+}
+
+function randomShooty(num){
+  return Math.floor(Math.random() * num)
 }
