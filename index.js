@@ -181,6 +181,8 @@ function resetGame() {
 }
 
 function playerShoot(data) {
+  let isOver = false
+
   if (gamePhase.attackTurn === "player" &&
     gamePhase.phase === "shooting" &&
     data.tableNumber === 1) {
@@ -190,15 +192,22 @@ function playerShoot(data) {
       board[x][y] = 'x';
       gamePhase.playerHits++;
       if (gamePhase.playerHits === gamePhase.maxShip) {
-        gamePhase.phase === 'end';
+        isOver = true
+        gamePhase.phase = 'end';
       }
     }
     else if(!board[x][y]){
       board[x][y] = 's';
     }
 
-    gamePhase.attackTurn = 'ai';
-    displayTextMessage('Click the AI shoot button', "black");
+    if(isOver){
+      gamePhase.phase = 'end';
+      displayTextMessage('Player winner', "black");
+    }
+    else{
+      gamePhase.attackTurn = 'ai';
+      displayTextMessage('Click the AI shoot button', "black");
+    }
     displayBoard({ boardnumber: 1, board: board });
   }
 }
@@ -206,22 +215,29 @@ function playerShoot(data) {
 function aiShoot(data) {
   const x = data.x.charCodeAt(0) - 65;
   const y = data.y - 1;
+  let isOver = false
+
   if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits<gamePhase.maxShip){
     if(ownBoard[x][y] === "p"){
       gamePhase.aiHits++;
       ownBoard[x][y]="x";
+      if(gamePhase.aiHits===gamePhase.maxShip){
+        isOver = true
+      }
     }
     else if(!ownBoard[x][y]){
       ownBoard[x][y]="z";    
     }
-    if(gamePhase.aiHits===gamePhase.maxShip){
+
+    if(isOver){
       gamePhase.phase="end";
       displayMessage("AI won, AI score:"+gamePhase.aiHits+", player score:");
+    }else{
+      gamePhase.attackTurn = "player";
+      displayTextMessage(`Player's turn`, "black");
     }
-  }
 
-  gamePhase.attackTurn = "player";
-  displayTextMessage(`Player's turn`, "black");
-  displayBoard({ boardnumber: 2, board: ownBoard });
+    displayBoard({ boardnumber: 2, board: ownBoard });
+  }
 }
 
