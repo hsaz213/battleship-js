@@ -7,7 +7,8 @@ let gamePhase={
   clicks:0,
   level: "",
   maxShip: 0,
-  mapSize: 0
+  mapSize: 0,
+  aiHits:0
 };  /*game phases:
 placement (initial phase):
   ai placement called from selectGame,
@@ -93,13 +94,13 @@ function selectGame(data) {
 
 function handleClick(data) {
   //input parameter: data: x:"B",y:"3",clickType:"left"
-  console.log("table number: "+data.tableNumber)
+  /*console.log("table number: "+data.tableNumber)
 
   if(gamePhase.phase=="player"){
     
   }else if(gamePhase.phase == "ai"){
 
-  }
+  }*/
   /*count the enemy ships --> allowed clicks for the player at placement phase*/
  // console.log("ai board:",board);
   //console.log("allowedClicks initial",gamePhase.maxShip,"data.y=",data.y,"data.y-1=",data.y-1,"data.y+1=",data.y+1);
@@ -190,23 +191,20 @@ function resetGame() {
 
   selectGame(gamePhase.level)
 }
-
 function aiShoot(data) {
-  //if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
-    
-    const x = randomShootx(gamePhase.mapSize)
-    const y = randomShooty(gamePhase.mapSize)
-
-    console.log(x, y)
-
-    gamePhase.attackTurn = "player"
-  //}
-}
-
-function randomShootx(num){
-  return Math.floor(Math.random() * num) 
-}
-
-function randomShooty(num){
-  return Math.floor(Math.random() * num)
+  const x = data.x.charCodeAt(0) - 65;
+  const y = data.y - 1;
+  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits<gamePhase.maxShip){
+    //console.log("AI shot at",x,y,"ownBoard element:",ownBoard[x][y]);
+    if(ownBoard[x][y]==="p"){
+      gamePhase.aiHits++;
+      ownBoard[x][y]="x";
+      displayBoard({ boardnumber: 2, board: ownBoard });
+      //console.log("AI hit! Ai hits:",gamePhase.aiHits);
+    }
+    if(gamePhase.aiHits===gamePhase.maxShip){
+      gamePhase.phase="end";
+      displayMessage("AI won, AI score:"+gamePhase.aiHits+", player score:");
+    }
+  }
 }
