@@ -92,7 +92,7 @@ function handleClick(data) {
       }
     }
   }
-  console.log("allowedClicks initial",allowedClicks);
+  console.log("allowedClicks initial",allowedClicks,"asd",(ownBoard[data.x.charCodeAt(0)-65][Number(data.y)+Number(1)]));
   let allowedCell=true;
   /*check cell according to placement rules --> allowed cells at placement phase
   did we click on p
@@ -102,36 +102,36 @@ function handleClick(data) {
       :is this direction+1 p
         ?allowed to false
         :do nothing*/
-  /* direction:up */
+  /* direction to check:up */
   ownBoard[data.x.charCodeAt(0)-65][data.y]==="p"
     ?allowedCell=false
     :data.x.charCodeAt(0)-65===0
-      ?undefined  //do nothing
-      :ownBoard[data.x.charCodeAt(0)-65-1][data.y]==="p"
+      ?undefined
+      :ownBoard[data.x.charCodeAt(0)-65-1][data.y]==="p"  //y-1
         ?allowedCell=false
         :undefined;
-  /* direction:down */
+  /* direction to check:down */
   ownBoard[data.x.charCodeAt(0)-65][data.y]==="p"
     ?allowedCell=false
     :data.x.charCodeAt(0)-65===ownBoard.length-1
       ?undefined
-      :ownBoard[data.x.charCodeAt(0)-65+1][data.y]==="p"
+      :ownBoard[data.x.charCodeAt(0)-65+1][data.y]==="p"  //y+1
         ?allowedCell=false
         :undefined;
-  /* direction:left */
+  /* direction to check:left */
   ownBoard[data.x.charCodeAt(0)-65][data.y]==="p"
     ?allowedCell=false
     :data.y===0
       ?undefined
-      :ownBoard[data.x.charCodeAt(0)-65][data.y-1]==="p"
+      :ownBoard[data.x.charCodeAt(0)-65][data.y-1]==="p"  //x
         ?allowedCell=false
         :undefined;
-  /* direction:right */
+  /* direction to check:right */
   ownBoard[data.x.charCodeAt(0)-65][data.y]==="p"
     ?allowedCell=false
-    :data.y===ownBoard[ownBoard.length-1].length-1
+    :data.y===ownBoard[data.x.charCodeAt(0)-65].length-1
       ?undefined
-      :ownBoard[data.x.charCodeAt(0)-65][data.y]==="p"
+      :ownBoard[data.x.charCodeAt(0)-65][Number(data.y)+Number(1)]==="p"
         ?allowedCell=false
         :undefined;
   console.log("allowedClicks:",allowedClicks,"\nallowedCell:",allowedCell,"\ndata:",data);
