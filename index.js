@@ -51,7 +51,6 @@ function getStepsByArray(array){
       column: Number(column)-1,
     }
   }
-  console.log(obj)
   return obj
 }
 //data parsing results: obj=[{column:0,row:0},{column:3},row:2] (getStepsByArray); size=4 (getSettings)
@@ -88,22 +87,13 @@ function selectGame(data) {
   gamePhase.phase="placement";/*set phase*/
   gamePhase.clicks=0;/*click counter to 0*/
   gamePhase.level = data
-  //console.log(gamePhase.phase,gamePhase.clicks);
 }
 
 function handleClick(data) {
   //input parameter: data: x:"B",y:"3",clickType:"left"
   console.log("table number: "+data.tableNumber)
 
-  if(gamePhase.phase=="player"){
-    
-  }else if(gamePhase.phase == "ai"){
-
-  }
   /*count the enemy ships --> allowed clicks for the player at placement phase*/
- // console.log("ai board:",board);
-  //console.log("allowedClicks initial",gamePhase.maxShip,"data.y=",data.y,"data.y-1=",data.y-1,"data.y+1=",data.y+1);
-
   /*place player ships*/
   if(gamePhase.phase === 'placement' && data.tableNumber === 2){
     if(allowedCell(data)){
@@ -119,14 +109,11 @@ function handleClick(data) {
   }
   else{
     if(data.tableNumber === 1){
-      
+      playerShoot(data)
       gamePhase.attackTurn = "ai"
     }
   }
-  displayBoard({boardnumber: 2,board: ownBoard});/**/
-
-  //console.log("\ngamePhase.phase:",gamePhase.phase,"\ngamePhase.clicks:",gamePhase.clicks);
-  //console.log("\nownBoard",ownBoard);
+  displayBoard({boardnumber: 2,board: ownBoard});
 }
 
 function allowedCell(data){
@@ -171,7 +158,6 @@ function allowedCell(data){
       :ownBoard[data.x.charCodeAt(0)-65][Number(data.y)+Number(1)]==="p"
         ?allowedCell=false
         :undefined;
-  //console.log("allowedClicks:",allowedClicks,"\nallowedCell:",allowedCell,"\ndata:",data);
 
   return allowedCell
 }
@@ -191,22 +177,31 @@ function resetGame() {
   selectGame(gamePhase.level)
 }
 
+function playerShoot(data) {
+  if (gamePhase.attackTurn === "player" &&
+    gamePhase.phase === "shooting" &&
+    data.tableNumber === 1) {
+    board[data.x.charCodeAt(0) - 65][data.y] = "s";/*A ascii: 65-->A=0,B=1...*/
+    console.log(data);
+    console.log(board);
+
+    displayBoard({ boardnumber: 1, board: board });
+    gamePhase.attackTurn = 'ai';
+  }
+}
+
 function aiShoot(data) {
-  //if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
-    
-    const x = randomShootx(gamePhase.mapSize)
-    const y = randomShooty(gamePhase.mapSize)
+  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting"){
+    /*const x = data.x.charCodeAt(0) - 65
+    const y = data.y - 1*/
+    const x = 0
+    const y = 0
 
-    console.log(x, y)
+    if(ownBoard[x][y]){
+      console.log("talált", x, y)
+    }
 
-    gamePhase.attackTurn = "player"
-  //}
+    gamePhase.attackTurn  = "player"
+  }
 }
 
-function randomShootx(num){
-  return Math.floor(Math.random() * num) 
-}
-
-function randomShooty(num){
-  return Math.floor(Math.random() * num)
-}
