@@ -107,7 +107,6 @@ function handleClick(data) {
 
         if (gamePhase.clicks == gamePhase.maxShip) {
           gamePhase.phase = "shooting"
-          console.log("shoot");
         }
       }
     }
@@ -186,7 +185,6 @@ function playerShoot(data) {
     const x = data.x.charCodeAt(0) - 65;
     const y = data.y;
     if (board[x][y] === 'o') {
-      console.log("player találat", x, y);
       board[x][y] = 'x';
       gamePhase.playerHits++;
       gamePhase.attackTurn = 'ai';
@@ -199,14 +197,10 @@ function playerShoot(data) {
       displayTextMessage('Click the AI shoot button', "black");
     }
     else if (!board[x][y]) {
-      console.log('belep');
       board[x][y] = 's';
       displayBoard({ boardnumber: 1, board: board });
       displayTextMessage('Click the AI shoot button', "black");
     }
-    // console.log([x, y]);
-    // console.log(board);
-    // console.log(gamePhase);
   }
 }
 
@@ -215,13 +209,9 @@ function aiShoot(data) {
   const y = data.y - 1;
   if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
 
-    console.log("AI shot at", x, y, "ownBoard element:", ownBoard[x][y]);
     if (ownBoard[x][y] === "p") {
-      console.log("belep")
       gamePhase.aiHits++;
       ownBoard[x][y] = "x";
-
-      console.log("AI hit! Ai hits:", gamePhase.aiHits);
     }
     else if (!ownBoard[x][y]) {
       ownBoard[x][y] = "z";
