@@ -92,7 +92,7 @@ function handleClick(data) {
       }
     }
   }
-  console.log("allowedClicks initial",allowedClicks,"asd",(ownBoard[data.x.charCodeAt(0)-65][Number(data.y)+Number(1)]));
+  console.log("allowedClicks initial",allowedClicks,"data.y=",data.y,"data.y-1=",data.y-1,"data.y+1=",data.y+1);
   let allowedCell=true;
   /*check cell according to placement rules --> allowed cells at placement phase
   did we click on p
