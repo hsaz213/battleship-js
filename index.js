@@ -7,7 +7,8 @@ let gamePhase = {
   clicks: 0,
   level: "",
   maxShip: 0,
-  mapSize: 0
+  mapSize: 0,
+  aiHits: 0
 };  /*game phases:
 placement (initial phase):
   ai placement called from selectGame,
@@ -206,20 +207,20 @@ function playerShoot(data) {
 }
 
 function aiShoot(data) {
-  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting") {
-    const x = data.x.charCodeAt(0) - 65;
-    const y = data.y - 1;
-
-    if (ownBoard[x][y] === 'p') {
-      console.log("AI találat", x, y);
-      ownBoard[x][y] = 'x';
-    } else {
-      ownBoard[x][y] = 'z';
+  const x = data.x.charCodeAt(0) - 65;
+  const y = data.y - 1;
+  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
+    //console.log("AI shot at",x,y,"ownBoard element:",ownBoard[x][y]);
+    if (ownBoard[x][y] === "p") {
+      gamePhase.aiHits++;
+      ownBoard[x][y] = "x";
+      displayBoard({ boardnumber: 2, board: ownBoard });
+      //console.log("AI hit! Ai hits:",gamePhase.aiHits);
     }
-    displayBoard({ boardnumber: 2, board: ownBoard });
-    gamePhase.attackTurn = "player";
-    displayTextMessage(`Player's turn`, "black");
-
+    if (gamePhase.aiHits === gamePhase.maxShip) {
+      gamePhase.phase = "end";
+      displayMessage("AI won, AI score:" + gamePhase.aiHits + ", player score:");
+    }
   }
 }
 
