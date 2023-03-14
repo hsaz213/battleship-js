@@ -123,7 +123,7 @@ function handleClick(data) {
     ?allowedCell=false
     :data.y===0
       ?undefined
-      :ownBoard[data.x.charCodeAt(0)-65][data.y-1]==="p"  //x
+      :ownBoard[data.x.charCodeAt(0)-65][Number(data.y)-Number(1)]==="p"  //x
         ?allowedCell=false
         :undefined;
   /* direction to check:right */
