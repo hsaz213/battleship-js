@@ -9,7 +9,7 @@ let gamePhase = {
   maxShip: 0,
   mapSize: 0,
   aiHits: 0,
-  playerHits: 0
+  playerHits: 0,
 };  /*game phases:
 placement (initial phase):
   ai placement called from selectGame,
@@ -161,6 +161,7 @@ function allowedCell(data) {
       : ownBoard[data.x.charCodeAt(0) - 65][Number(data.y) + Number(1)] === "p"
         ? allowedCell = false
         : undefined;
+
   return allowedCell
 }
 
@@ -175,6 +176,7 @@ function resetGame() {
   }
   displayBoard({ boardnumber: 1, board: board });
   displayBoard({ boardnumber: 2, board: ownBoard });
+
   selectGame(gamePhase.level)
 }
 
@@ -187,45 +189,39 @@ function playerShoot(data) {
     if (board[x][y] === 'o') {
       board[x][y] = 'x';
       gamePhase.playerHits++;
-      gamePhase.attackTurn = 'ai';
       if (gamePhase.playerHits === gamePhase.maxShip) {
-        alert('Player victory');
         gamePhase.phase === 'end';
       }
-      displayBoard({ boardnumber: 1, board: board });
-      gamePhase.attackTurn = 'ai';
-      displayTextMessage('Click the AI shoot button', "black");
     }
-    else if (!board[x][y]) {
+    else if(!board[x][y]){
       board[x][y] = 's';
-      displayBoard({ boardnumber: 1, board: board });
-      displayTextMessage('Click the AI shoot button', "black");
     }
+
+    gamePhase.attackTurn = 'ai';
+    displayTextMessage('Click the AI shoot button', "black");
+    displayBoard({ boardnumber: 1, board: board });
   }
 }
 
 function aiShoot(data) {
   const x = data.x.charCodeAt(0) - 65;
   const y = data.y - 1;
-  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
-
-    if (ownBoard[x][y] === "p") {
+  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits<gamePhase.maxShip){
+    if(ownBoard[x][y] === "p"){
       gamePhase.aiHits++;
-      ownBoard[x][y] = "x";
+      ownBoard[x][y]="x";
     }
-    else if (!ownBoard[x][y]) {
-      ownBoard[x][y] = "z";
+    else if(!ownBoard[x][y]){
+      ownBoard[x][y]="z";    
     }
-    if (gamePhase.aiHits === gamePhase.maxShip) {
-      gamePhase.phase = "end";
-      displayMessage("AI won, AI score:" + gamePhase.aiHits + ", player score:");
+    if(gamePhase.aiHits===gamePhase.maxShip){
+      gamePhase.phase="end";
+      displayMessage("AI won, AI score:"+gamePhase.aiHits+", player score:");
     }
-    displayBoard({ boardnumber: 2, board: ownBoard });
-    displayTextMessage(`Player's turn`, "black");
-
   }
 
   gamePhase.attackTurn = "player";
   displayTextMessage(`Player's turn`, "black");
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
+
