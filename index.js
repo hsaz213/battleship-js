@@ -22,23 +22,23 @@ clicks: count the player clicks, after the 2nd click, set phase to shooting*/
 
 //data parsing input parameter data: size:4,s:{s1:a1,s2:c4}
 function getSettings(data) {
-  let [size, ...ste] = data.split(',') // ['size:4', 's:{s1:a1,s2:c4}']
-  let steps = ste.join(',')
+  let [size, ...ste] = data.split(','); // ['size:4', 's:{s1:a1,s2:c4}']
+  let steps = ste.join(',');
 
-  size = size.split(':')[1] // ['size', '4'] -> 4
-  gamePhase.mapSize = size
+  size = size.split(':')[1]; // ['size', '4'] -> 4
+  gamePhase.mapSize = size;
 
   //Number(size)? / Int.parse??
-  steps = steps.slice(3, -1) // 's:{s1:a1,s2:c4}' -> 's1:a1,s2:c4'
-  steps = steps.split(',') // ['s1:a1', 's2:c4']
+  steps = steps.slice(3, -1); // 's:{s1:a1,s2:c4}' -> 's1:a1,s2:c4'
+  steps = steps.split(','); // ['s1:a1', 's2:c4']
 
-  let stepsArray = getStepsByArray(steps)
-  gamePhase.maxShip = stepsArray.length
+  let stepsArray = getStepsByArray(steps);
+  gamePhase.maxShip = stepsArray.length;
 
   displayTextMessage(data, "black");
   displayMessage("size:" + size + ", ai ships:" + JSON.stringify(stepsArray), "black");
 
-  generateMap(size, stepsArray) //stepsArray-->ships
+  generateMap(size, stepsArray); //stepsArray-->ships
 }
 
 function getStepsByArray(array) {
@@ -106,7 +106,7 @@ function handleClick(data) {
         gamePhase.clicks += 1;
 
         if (gamePhase.clicks == gamePhase.maxShip) {
-          gamePhase.phase = "shooting"
+          gamePhase.phase = "shooting";
         }
       }
     }
@@ -162,7 +162,7 @@ function allowedCell(data) {
         ? allowedCell = false
         : undefined;
 
-  return allowedCell
+  return allowedCell;
 }
 
 /*reset both boards*/
@@ -181,7 +181,7 @@ function resetGame() {
 }
 
 function playerShoot(data) {
-  let isOver = false
+  let isOver = false;
 
   if (gamePhase.attackTurn === "player" &&
     gamePhase.phase === "shooting" &&
@@ -192,7 +192,7 @@ function playerShoot(data) {
       board[x][y] = "💥";
       gamePhase.playerHits++;
       if (gamePhase.playerHits === gamePhase.maxShip) {
-        isOver = true
+        isOver = true;
         gamePhase.phase = 'end';
       }
     }
@@ -215,14 +215,14 @@ function playerShoot(data) {
 function aiShoot(data) {
   const x = data.x.charCodeAt(0) - 65;
   const y = data.y - 1;
-  let isOver = false
+  let isOver = false;
 
   if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
     if (ownBoard[x][y] === '🛳️') {
       gamePhase.aiHits++;
       ownBoard[x][y] = "💥";
       if (gamePhase.aiHits === gamePhase.maxShip) {
-        isOver = true
+        isOver = true;
       }
     }
     else if (!ownBoard[x][y]) {
