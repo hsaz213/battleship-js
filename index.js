@@ -72,12 +72,12 @@ function generateMap(size, ships) { //stepsArray-->ships
       if (!ownBoard[i][j]) { ownBoard[i][j] = [] }
 
       //clear ai board and fill in the ai ships ("o")
-      board[i][j] = ""
+      board[i][j] = "🌊"
       for (el in ships) {
-        i === ships[el].row && j === ships[el].column ? board[i][j] = 'o' : ''
+        i === ships[el].row && j === ships[el].column ? board[i][j] = '🚢' : '🌊'
       }
       //clear ownBoard
-      ownBoard[i][j] = ""
+      ownBoard[i][j] = "🌊"
     }
   }
   //display the boards
@@ -102,7 +102,7 @@ function handleClick(data) {
   if (gamePhase.phase === 'placement' && data.tableNumber === 2) {
     if (allowedCell(data)) {
       if (gamePhase.clicks < gamePhase.maxShip) {
-        ownBoard[data.x.charCodeAt(0) - 65][data.y] = "p";/*A ascii: 65-->A=0,B=1...*/
+        ownBoard[data.x.charCodeAt(0) - 65][data.y] = '🛳️';/*A ascii: 65-->A=0,B=1...*/
         gamePhase.clicks += 1;
 
         if (gamePhase.clicks == gamePhase.maxShip) {
@@ -130,35 +130,35 @@ function allowedCell(data) {
         ?allowed to false
         :do nothing*/
   /* direction to check:up */
-  ownBoard[data.x.charCodeAt(0) - 65][data.y] === "p"
+  ownBoard[data.x.charCodeAt(0) - 65][data.y] === '🛳️'
     ? allowedCell = false
     : data.x.charCodeAt(0) - 65 === 0
       ? undefined
-      : ownBoard[data.x.charCodeAt(0) - 65 - 1][data.y] === "p"  //y-1
+      : ownBoard[data.x.charCodeAt(0) - 65 - 1][data.y] === '🛳️'  //y-1
         ? allowedCell = false
         : undefined;
   /* direction to check:down */
-  ownBoard[data.x.charCodeAt(0) - 65][data.y] === "p"
+  ownBoard[data.x.charCodeAt(0) - 65][data.y] === '🛳️'
     ? allowedCell = false
     : data.x.charCodeAt(0) - 65 === ownBoard.length - 1
       ? undefined
-      : ownBoard[data.x.charCodeAt(0) - 65 + 1][data.y] === "p"  //y+1
+      : ownBoard[data.x.charCodeAt(0) - 65 + 1][data.y] === '🛳️'  //y+1
         ? allowedCell = false
         : undefined;
   /* direction to check:left */
-  ownBoard[data.x.charCodeAt(0) - 65][data.y] === "p"
+  ownBoard[data.x.charCodeAt(0) - 65][data.y] === '🛳️'
     ? allowedCell = false
     : data.y === 0
       ? undefined
-      : ownBoard[data.x.charCodeAt(0) - 65][Number(data.y) - Number(1)] === "p"  //x
+      : ownBoard[data.x.charCodeAt(0) - 65][Number(data.y) - Number(1)] === '🛳️'  //x
         ? allowedCell = false
         : undefined;
   /* direction to check:right */
-  ownBoard[data.x.charCodeAt(0) - 65][data.y] === "p"
+  ownBoard[data.x.charCodeAt(0) - 65][data.y] === '🛳️'
     ? allowedCell = false
     : data.y === ownBoard[data.x.charCodeAt(0) - 65].length - 1
       ? undefined
-      : ownBoard[data.x.charCodeAt(0) - 65][Number(data.y) + Number(1)] === "p"
+      : ownBoard[data.x.charCodeAt(0) - 65][Number(data.y) + Number(1)] === '🛳️'
         ? allowedCell = false
         : undefined;
 
@@ -170,8 +170,8 @@ function resetGame() {
   gamePhase.clicks = 0;/*click counter to 0*/
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
-      board[i][j] = "";
-      ownBoard[i][j] = "";
+      board[i][j] = "🌊";
+      ownBoard[i][j] = "🌊";
     }
   }
   displayBoard({ boardnumber: 1, board: board });
@@ -188,23 +188,23 @@ function playerShoot(data) {
     data.tableNumber === 1) {
     const x = data.x.charCodeAt(0) - 65;
     const y = data.y;
-    if (board[x][y] === 'o') {
-      board[x][y] = 'x';
+    if (board[x][y] === '🚢') {
+      board[x][y] = "💥";
       gamePhase.playerHits++;
       if (gamePhase.playerHits === gamePhase.maxShip) {
         isOver = true
         gamePhase.phase = 'end';
       }
     }
-    else if(!board[x][y]){
-      board[x][y] = 's';
+    else if (!board[x][y]) {
+      board[x][y] = '💦';
     }
 
-    if(isOver){
+    if (isOver) {
       gamePhase.phase = 'end';
       displayTextMessage('Player winner', "black");
     }
-    else{
+    else {
       gamePhase.attackTurn = 'ai';
       displayTextMessage('Click the AI shoot button', "black");
     }
@@ -217,22 +217,22 @@ function aiShoot(data) {
   const y = data.y - 1;
   let isOver = false
 
-  if(gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits<gamePhase.maxShip){
-    if(ownBoard[x][y] === "p"){
+  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
+    if (ownBoard[x][y] === '🛳️') {
       gamePhase.aiHits++;
-      ownBoard[x][y]="x";
-      if(gamePhase.aiHits===gamePhase.maxShip){
+      ownBoard[x][y] = "💥";
+      if (gamePhase.aiHits === gamePhase.maxShip) {
         isOver = true
       }
     }
-    else if(!ownBoard[x][y]){
-      ownBoard[x][y]="z";    
+    else if (!ownBoard[x][y]) {
+      ownBoard[x][y] = "💦";
     }
 
-    if(isOver){
-      gamePhase.phase="end";
-      displayMessage("AI won, AI score:"+gamePhase.aiHits+", player score:");
-    }else{
+    if (isOver) {
+      gamePhase.phase = "end";
+      displayMessage("AI won, AI score:" + gamePhase.aiHits + ", player score:");
+    } else {
       gamePhase.attackTurn = "player";
       displayTextMessage(`Player's turn`, "black");
     }
