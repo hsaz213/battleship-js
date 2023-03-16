@@ -182,7 +182,7 @@ function playerShoot(data) {
     else if (board[x][y] === "🌊") {
       board[x][y] = '💦';
       maskedBoard[x][y] = '💦';
-      displayTextMessage(`Missed!`);
+      displayTextMessage(`You missed!`);
     }
 
     if (isOver) {
@@ -214,7 +214,7 @@ function aiShoot(data) {
       }
       else if (ownBoard[x][y] === "🌊") {
         ownBoard[x][y] = "💦";
-        displayTextMessage(`Missed!`);
+        displayTextMessage(`AI missed!`);
       }
 
       if (isOver) {
