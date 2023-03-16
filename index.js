@@ -3,6 +3,7 @@
 
 let board = []; //define ai board
 let ownBoard = []; //define player board
+let maskedBoard = [];
 const gamePhase = {
   phase: "placement",
   attackTurn: "ai",
@@ -25,11 +26,13 @@ function getSettings(data) {
   steps = steps.slice(3, -1); // 's:{s1:a1,s2:c4}' -> 's1:a1,s2:c4'
   steps = steps.split(','); // ['s1:a1', 's2:c4']
 
-  let stepsArray = getStepsByArray(steps);
+  const stepsArray = getStepsByArray(steps);
   gamePhase.maxShip = stepsArray.length;
 
-  displayTextMessage(data, "black");
-  displayMessage("size:" + size + ", ai ships:" + JSON.stringify(stepsArray), "black");
+  displayMessage('Battleship', "black");
+  displayTextMessage('Place your ships on the board.', "black");
+  // displayTextMessage(data, "black");
+  // displayMessage("size:" + size + ", ai ships:" + JSON.stringify(stepsArray), "black");
 
   generateMap(size, stepsArray); //stepsArray-->ships
 }
@@ -56,15 +59,19 @@ function generateMap(size, ships) { //stepsArray-->ships
   //clear the boards
   board = [];
   ownBoard = [];
+  maskedBoard = [];
   //make an i x j (size x size) board and ownBoard array
   for (let i = 0; i < size; i++) {
     if (!board[i]) { board[i] = [] }
+    if (!maskedBoard[i]) { maskedBoard[i] = [] }
     if (!ownBoard[i]) { ownBoard[i] = [] }
     for (let j = 0; j < size; j++) {
       if (!board[i][j]) { board[i][j] = [] }
+      if (!maskedBoard[i][j]) { maskedBoard[i][j] = [] }
       if (!ownBoard[i][j]) { ownBoard[i][j] = [] }
       //clear ai board and fill in the ai ships ("o")
       board[i][j] = "🌊";
+      maskedBoard[i][j] = "🌊";
       for (const el in ships) {
         i === ships[el].row && j === ships[el].column ? board[i][j] = '🚢' : '🌊';
       }
@@ -72,7 +79,7 @@ function generateMap(size, ships) { //stepsArray-->ships
       ownBoard[i][j] = "🌊";
     }
   }
-  displayBoard({ boardnumber: 1, board: board });
+  displayBoard({ boardnumber: 1, board: maskedBoard });
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
 
@@ -100,7 +107,7 @@ function handleClick(data) {
     }
   }
   else if (data.tableNumber === 1 && gamePhase.phase == "shooting") {
-     {
+    {
       playerShoot(data);
     }
   }
@@ -109,28 +116,28 @@ function handleClick(data) {
 
 function allowedCell(data) {
   let isAllowed = true;
-  const datax=data.x.charCodeAt(0) - 65;
+  const datax = data.x.charCodeAt(0) - 65;
   //check if the cell is a ship --> not allowed
-  if(ownBoard[datax][data.y]==='🛳️'){
-    isAllowed=false;
+  if (ownBoard[datax][data.y] === '🛳️') {
+    isAllowed = false;
   }
   /*else if its not the edge of the board towards this direction (cell+1 exists)
   && cell+1 in this direction is a ship --> not allowed*/
   //direction to check: up
-  else if(datax!==0&&ownBoard[datax-1][data.y]==='🛳️'){
-    isAllowed=false;
+  else if (datax !== 0 && ownBoard[datax - 1][data.y] === '🛳️') {
+    isAllowed = false;
   }
   //direction to check:down
-  else if(datax!==ownBoard.length-1&&ownBoard[datax+1][data.y]==='🛳️'){
-    isAllowed=false;
+  else if (datax !== ownBoard.length - 1 && ownBoard[datax + 1][data.y] === '🛳️') {
+    isAllowed = false;
   }
   //direction to check:left
-  else if(data.y!==0&&ownBoard[datax][Number(data.y)-Number(1)]==='🛳️'){
-    isAllowed=false;
+  else if (data.y !== 0 && ownBoard[datax][Number(data.y) - Number(1)] === '🛳️') {
+    isAllowed = false;
   }
   //direction to check:right
-  else if(data.y!=ownBoard[datax].length-1&&ownBoard[datax][Number(data.y)+Number(1)]==='🛳️'){
-    isAllowed=false;
+  else if (data.y != ownBoard[datax].length - 1 && ownBoard[datax][Number(data.y) + Number(1)] === '🛳️') {
+    isAllowed = false;
   }
   return isAllowed;
 }
@@ -141,10 +148,13 @@ function resetGame() {
     for (let j = 0; j < board[i].length; j++) {
       board[i][j] = "🌊";
       ownBoard[i][j] = "🌊";
+      maskedBoard[i][j] = "🌊"
     }
   }
-  displayBoard({ boardnumber: 1, board: board });
+  displayBoard({ boardnumber: 1, board: maskedBoard });
   displayBoard({ boardnumber: 2, board: ownBoard });
+
+
 
   selectGame(gamePhase.level);
 }
@@ -160,6 +170,8 @@ function playerShoot(data) {
     if (board[x][y] === '🚢') {
       gamePhase.playerHits++;
       board[x][y] = "💥";
+      maskedBoard[x][y] = '💥';
+
       displayTextMessage(`AI score: ${gamePhase.aiHits}, \n Player score: ${gamePhase.playerHits}`);
 
       if (gamePhase.playerHits === gamePhase.maxShip) {
@@ -167,8 +179,10 @@ function playerShoot(data) {
         gamePhase.phase = 'end';
       }
     }
-    else if (!board[x][y]) {
+    else if (board[x][y] === "🌊") {
       board[x][y] = '💦';
+      maskedBoard[x][y] = '💦';
+      displayTextMessage(`Missed!`);
     }
 
     if (isOver) {
@@ -179,7 +193,7 @@ function playerShoot(data) {
       gamePhase.attackTurn = 'ai';
       displayMessage('Click the AI shoot button', "black");
     }
-    displayBoard({ boardnumber: 1, board: board });
+    displayBoard({ boardnumber: 1, board: maskedBoard });
   }
 }
 
@@ -188,27 +202,34 @@ function aiShoot(data) {
   const y = data.y - 1;
   let isOver = false;
 
-  if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
-    if (ownBoard[x][y] === '🛳️') {
-      gamePhase.aiHits++;
-      ownBoard[x][y] = "💥";
-      displayTextMessage(`AI score: ${gamePhase.aiHits}, \n Player score: ${gamePhase.playerHits}`);
-      if (gamePhase.aiHits === gamePhase.maxShip) {
-        isOver = true;
+  if (ownBoard[x][y] !== '💥' && ownBoard[x][y] !== "💦") {
+    if (gamePhase.attackTurn === "ai" && gamePhase.phase === "shooting" && gamePhase.aiHits < gamePhase.maxShip) {
+      if (ownBoard[x][y] === '🛳️') {
+        gamePhase.aiHits++;
+        ownBoard[x][y] = "💥";
+        displayTextMessage(`AI score: ${gamePhase.aiHits}, \n Player score: ${gamePhase.playerHits}`);
+        if (gamePhase.aiHits === gamePhase.maxShip) {
+          isOver = true;
+        }
       }
-    }
-    else if (!ownBoard[x][y]) {
-      ownBoard[x][y] = "💦";
-    }
+      else if (ownBoard[x][y] === "🌊") {
+        ownBoard[x][y] = "💦";
+        displayTextMessage(`Missed!`);
+      }
 
-    if (isOver) {
-      gamePhase.phase = "end";
-      displayMessage(`AI wins`);
-    } else {
-      gamePhase.attackTurn = "player";
-      displayMessage(`Player's turn`, "black");
+      if (isOver) {
+        gamePhase.phase = "end";
+        displayMessage(`AI wins`);
+      } else {
+        gamePhase.attackTurn = "player";
+        displayMessage(`Player's turn`, "black");
+      }
+      displayBoard({ boardnumber: 2, board: ownBoard });
     }
-    displayBoard({ boardnumber: 2, board: ownBoard });
+  } else {
+    aiShoot({
+      x: String.fromCharCode(Math.floor(Math.random() * board.length + 65)),
+      y: Math.floor(Math.random() * board.length + 1),
+    });
   }
 }
-
