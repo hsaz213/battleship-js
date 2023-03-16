@@ -106,6 +106,7 @@ function handleClick(data) {
         gamePhase.clicks += 1;
 
         if (gamePhase.clicks == gamePhase.maxShip) {
+          displayMessage('Click the AI shoot button', "red");
           gamePhase.phase = "shooting";
         }
       }
@@ -189,8 +190,10 @@ function playerShoot(data) {
     const x = data.x.charCodeAt(0) - 65;
     const y = data.y;
     if (board[x][y] === '🚢') {
-      board[x][y] = "💥";
       gamePhase.playerHits++;
+      board[x][y] = "💥";
+      displayTextMessage(`AI score: ${gamePhase.aiHits}, \n Player score: ${gamePhase.playerHits}`);
+
       if (gamePhase.playerHits === gamePhase.maxShip) {
         isOver = true;
         gamePhase.phase = 'end';
@@ -202,11 +205,11 @@ function playerShoot(data) {
 
     if (isOver) {
       gamePhase.phase = 'end';
-      displayTextMessage('Player winner', "black");
+      displayMessage(`WINNER WINNER CHICKN DINNER`);
     }
     else {
       gamePhase.attackTurn = 'ai';
-      displayTextMessage('Click the AI shoot button', "black");
+      displayMessage('Click the AI shoot button', "black");
     }
     displayBoard({ boardnumber: 1, board: board });
   }
@@ -221,6 +224,7 @@ function aiShoot(data) {
     if (ownBoard[x][y] === '🛳️') {
       gamePhase.aiHits++;
       ownBoard[x][y] = "💥";
+      displayTextMessage(`AI score: ${gamePhase.aiHits}, \n Player score: ${gamePhase.playerHits}`);
       if (gamePhase.aiHits === gamePhase.maxShip) {
         isOver = true;
       }
@@ -231,12 +235,11 @@ function aiShoot(data) {
 
     if (isOver) {
       gamePhase.phase = "end";
-      displayMessage("AI won, AI score:" + gamePhase.aiHits + ", player score:");
+      displayMessage(`AI wins`);
     } else {
       gamePhase.attackTurn = "player";
-      displayTextMessage(`Player's turn`, "black");
+      displayMessage(`Player's turn`, "black");
     }
-
     displayBoard({ boardnumber: 2, board: ownBoard });
   }
 }
