@@ -148,14 +148,18 @@ function resetGame() {
     for (let j = 0; j < board[i].length; j++) {
       board[i][j] = "🌊";
       ownBoard[i][j] = "🌊";
-      maskedBoard[i][j] = "🌊"
+      maskedBoard[i][j] = "🌊";
     }
   }
+  gamePhase.phase= "placement";
+  gamePhase.attackTurn= "ai";
+  gamePhase.clicks= 0;
+  gamePhase.maxShip= 0;
+  gamePhase.mapSize= 0;
+  gamePhase.aiHits= 0;
+  gamePhase.playerHits= 0;
   displayBoard({ boardnumber: 1, board: maskedBoard });
   displayBoard({ boardnumber: 2, board: ownBoard });
-
-
-
   selectGame(gamePhase.level);
 }
 
