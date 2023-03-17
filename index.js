@@ -1,8 +1,8 @@
 /* eslint-disable prefer-template */
 /* eslint-disable no-unused-expressions */
 
-let board = []; //define ai board
-let ownBoard = []; //define player board
+let board = [];
+let ownBoard = [];
 let maskedBoard = [];
 const gamePhase = {
   phase: 'placement',
@@ -55,7 +55,7 @@ function getStepsByArray(array) {
 }
 //data parsing results: obj=[{column:0,row:0},{column:3},row:2] (getStepsByArray); size=4 (getSettings)
 
-function generateMap(size, ships) { //stepsArray-->ships
+function generateMap(size, ships) {
   //clear the boards
   board = [];
   ownBoard = [];
@@ -190,7 +190,6 @@ function playerShoot(data) {
     }
 
     if (isOver) {
-      gamePhase.phase = 'end';
       displayMessage(`WINNER WINNER CHICKN DINNER`);
     }
     else {
