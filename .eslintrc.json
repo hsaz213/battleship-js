@@ -37,10 +37,13 @@
     "no-lonely-if": "warn",
     "no-mixed-operators": "warn",
     "no-return-assign": "error",
-    "no-restricted-properties": ["error", {
-      "property": "lenght",
-      "message": "Did you mean 'length'?"
-    }],
+    "no-restricted-properties": [
+      "error",
+      {
+        "property": "lenght",
+        "message": "Did you mean 'length'?"
+      }
+    ],
     "no-shadow": "warn",
     "no-undefined": "error",
     "no-unneeded-ternary": "warn",
@@ -58,7 +61,7 @@
     "yoda": "warn",
     "arrow-parens": "warn",
     //"brace-style": "warn",
-    "comma-dangle": ["warn", "always-multiline"],
+    //"comma-dangle": ["warn", "always-multiline"],
     //"comma-spacing": "warn",
     "comma-style": "warn",
     "eol-last": "warn",
