@@ -90,13 +90,29 @@ function handleClick(data) {
     let y = Number(data.y);
     let currentShipSize = gamePhase.shipTypes.sort()[0];
 
-    // left-le right-down
-
     if (data.clickType == "left") {
-      checkLeftDirection({ x: x, y: y }, 2);
-      //checkRightDirection({ x: x, y: y }, 3);
+      if (checkLeftDirection({ x: x, y: y }, currentShipSize)) {
+        placePlayerShip(x, y, currentShipSize, data.clickType);
+      }
+    } else if (data.clickType == "right") {
+      if (checkRightDirection({ x: x, y: y }, currentShipSize)) {
+        placePlayerShip(x, y, currentShipSize, data.clickType);
+      }
     }
   }
+}
+
+function placePlayerShip(x, y, shipSize, clickType) {
+  gamePhase.shipTypes.shift();
+  for (let i = 0; i < shipSize; i++) {
+    if (clickType == "left") {
+      ownBoard[x + i][y] = `${shipSize}`;
+    } else {
+      ownBoard[x][y + i] = `${shipSize}`;
+    }
+  }
+
+  displayBoard({ boardnumber: 2, board: ownBoard });
 }
 
 function checkLeftDirection(coord, size) {
@@ -105,21 +121,22 @@ function checkLeftDirection(coord, size) {
 
   let result = true;
 
-  if (!board[x + (size - 1)]) result = false;
+  if (!ownBoard[x + (size - 1)]) result = false;
 
   for (let i = 0; i < size; i++) {
     if (
-      board[x][y] ||
-      (board[x - 1] && board[x - 1][y]) /*teteje*/ ||
-      (board[x + 1] && board[x + 1][y]) /*alja*/
+      ownBoard[x][y] ||
+      (ownBoard[x - 1] && ownBoard[x - 1][y]) ||
+      (ownBoard[x + i] && ownBoard[x + i][y]) ||
+      (ownBoard[x + i + 1] && ownBoard[x + i + 1][y]) ||
+      (ownBoard[x + i] && ownBoard[x + i][y + 1]) ||
+      (ownBoard[x + i] && ownBoard[x + i][y - 1])
     ) {
       result = false;
     }
   }
 
-  if (!result) {
-    console.log("nem");
-  } else console.log("jo");
+  return result;
 }
 
 function checkRightDirection(coord, size) {
@@ -128,23 +145,19 @@ function checkRightDirection(coord, size) {
 
   let result = true;
 
-  if (board[x][y + (size - 1)] != "") result = false;
+  if (ownBoard[x][y + (size - 1)] != "") result = false;
 
   for (let i = 0; i < size; i++) {
     if (
-      board[x][y] ||
-      board[x][y - 1] ||
-      board[x][y + i + 1] ||
-      (board[x + 1] && board[x + 1][y + i]) ||
-      (board[x - 1] && board[x - 1][y + i])
+      ownBoard[x][y] ||
+      ownBoard[x][y - 1] ||
+      ownBoard[x][y + i + 1] ||
+      (ownBoard[x + 1] && ownBoard[x + 1][y + i]) ||
+      (ownBoard[x - 1] && ownBoard[x - 1][y + i])
     ) {
       result = false;
     }
   }
-
-  if (!result) {
-    console.log("nem");
-  } else console.log("jo");
 
   return result;
 }
