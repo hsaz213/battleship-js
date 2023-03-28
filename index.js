@@ -85,7 +85,7 @@ function selectGame(data) {
 function handleClick(data) {
   displayMessage(data.x + data.y + data.clickType + data.tableNumber);
 
-  if (gamePhase.phase == "placement" && data.tableNumber === 2) {
+  if (gamePhase.phase == "placement") {
     let x = data.x.charCodeAt(0) - 65;
     let y = Number(data.y);
     let currentShipSize = gamePhase.shipTypes.sort()[0];
@@ -93,8 +93,8 @@ function handleClick(data) {
     // left-le right-down
 
     if (data.clickType == "left") {
-      //checkLeftDirection({ x: x, y: y }, currentShipSize);
-      checkRightDirection({ x: x, y: y }, 1);
+      checkLeftDirection({ x: x, y: y }, 2);
+      //checkRightDirection({ x: x, y: y }, 3);
     }
   }
 }
@@ -105,14 +105,13 @@ function checkLeftDirection(coord, size) {
 
   let result = true;
 
-  if (!ownBoard[x + size][y]) result = false;
+  if (!board[x + (size - 1)]) result = false;
 
   for (let i = 0; i < size; i++) {
     if (
-      (ownBoard[x + i] && ownBoard[x + i][y]) ||
-      ownBoard[x][y + 1] ||
-      ownBoard[x][y - 1] ||
-      (ownBoard[x - i] && ownBoard[x - i][y])
+      board[x][y] ||
+      (board[x - 1] && board[x - 1][y]) /*teteje*/ ||
+      (board[x + 1] && board[x + 1][y]) /*alja*/
     ) {
       result = false;
     }
@@ -121,8 +120,6 @@ function checkLeftDirection(coord, size) {
   if (!result) {
     console.log("nem");
   } else console.log("jo");
-
-  return result;
 }
 
 function checkRightDirection(coord, size) {
@@ -131,13 +128,15 @@ function checkRightDirection(coord, size) {
 
   let result = true;
 
-  if (!ownBoard[x][y + size]) result = false;
+  if (board[x][y + (size - 1)] != "") result = false;
 
   for (let i = 0; i < size; i++) {
     if (
-      (ownBoard[x - 1] && ownBoard[x - 1][y + i]) ||
-      ownBoard[x][y - i] ||
-      (ownBoard[x + 1] && ownBoard[x + 1][y + i])
+      board[x][y] ||
+      board[x][y - 1] ||
+      board[x][y + i + 1] ||
+      (board[x + 1] && board[x + 1][y + i]) ||
+      (board[x - 1] && board[x - 1][y + i])
     ) {
       result = false;
     }
