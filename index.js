@@ -350,6 +350,7 @@ function markUnavailableCells() {
 }
 
 function oldAiShoot() {
+  console.clear();
   let isOver = false;
   let x = Math.floor(Math.random() * board.length);
   let y = Math.floor(Math.random() * board.length);
@@ -405,14 +406,15 @@ function oldAiShoot() {
 }
 
 function secondAiShoot() {
+  console.clear();
   x = Number(gamePhase.currentCell[0]);
   y = Number(gamePhase.currentCell[1]);
   console.log(
     `current cell is ${gamePhase.currentCell}, ownBoard at this cell is${ownBoard[x][y]}`
   );
   let hitShip2Long = false;
+  //jobbra
   if (gamePhase.aiCounter === 0) {
-    //jobbra
     console.log('jobb', gamePhase.aiCounter);
     if (
       (ownBoard[x][y + 1] && ownBoard[x][y + 1] !== 'n' && ownBoard[x][y + 1] !== 'm') ||
@@ -435,8 +437,8 @@ function secondAiShoot() {
     }
     console.log('jobb', gamePhase.aiCounter);
   }
+  //le
   if (gamePhase.aiCounter === 1) {
-    //le
     console.log('le', gamePhase.aiCounter);
     if (
       (ownBoard[x + 1] && ownBoard[x + 1][y] !== 'n' && ownBoard[x + 1][y] !== 'm') ||
@@ -459,8 +461,8 @@ function secondAiShoot() {
     }
     console.log('le', gamePhase.aiCounter);
   }
+  //balra
   if (gamePhase.aiCounter === 2) {
-    //balra
     console.log('bal', gamePhase.aiCounter);
     if (
       (ownBoard[x][y - 1] && ownBoard[x][y - 1] !== 'n' && ownBoard[x][y - 1] !== 'm') ||
@@ -483,8 +485,8 @@ function secondAiShoot() {
     }
     console.log('bal', gamePhase.aiCounter);
   }
+  //fel
   if (gamePhase.aiCounter === 3) {
-    //fel
     console.log('fel', gamePhase.aiCounter);
     if (
       (ownBoard[x - 1] && ownBoard[x - 1][y] !== 'n' && ownBoard[x - 1][y] !== 'm') ||
@@ -518,6 +520,7 @@ function secondAiShoot() {
     gamePhase.maxShips--;
     gamePhase.aiCounter = 0;
     console.log('destroyed');
+    aiCurrentHits = 0;
   }
 
   //if over
@@ -525,17 +528,22 @@ function secondAiShoot() {
   if (shipCount == 0) {
     gamePhase.phase = 'end';
     displayMessage(`AI wins`);
-  } else if (aiCurrentHits !== 0) {
+  } else if (aiCurrentHits === 1) {
     gamePhase.attackTurn = 'player';
     displayTextMessage('Ai missed in secondAiShoot');
     displayMessage(`Player's turn`, 'black');
-  } else {
+  }
+
+  //secondAiShoot successful, move on to thirdAiShoot
+  else {
     gamePhase.attackTurn = 'player';
+    gamePhase.aiCounter = 0;
     displayMessage(`Player's turn`, 'black');
     displayTextMessage('Ai hit in secondAiShoot');
   }
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
 function thirdAiShoot() {
+  console.clear();
   console.log('thirdAiShoot', gamePhase.aiCounter);
 }
