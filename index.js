@@ -260,12 +260,30 @@ function destroyPlayerShip() {
     }
   }
 }
+function shipDetector(board) {
+  let counter = 0;
+  for (let i = 0; i < ownBoard.length; i++) {
+    for (let j = 0; j < ownBoard[i].length; j++) {
+      if (
+        ownBoard[i][j] !== '' &&
+        ownBoard[i][j] !== 'm' &&
+        ownBoard[i][j] !== '' &&
+        ownBoard[i][j] !== 'h' &&
+        ownBoard[i][j] !== 'x'
+      ) {
+        ownBoard[i][j] = 'x';
+      }
+    }
+  }
+  return counter;
+}
 function aiShoot(originalData) {
+  console.log(originalData);
   let isOver = false;
   const aiCurrentHits = countAIHits();
   oldAiShoot(isOver);
   /*
-    aiCurrentHits(), süllyedt=destroyPlayerShip()
+    function: aiCurrentHits(), süllyedt=destroyPlayerShip()
     globális... számláló a körbelövéshez, kiindulási mező a 2. 3. részhez, irány a 3. részhez
 
     ha aiCurrentHits===0, akkor firstAiShoot(isOver)
@@ -292,25 +310,60 @@ function aiShoot(originalData) {
       ha nem létezik (kiindulási mező + aiCurrentHits). mező és/vagy kiindulási mező -irány - 1 nem üres vagy miss:
         kiindulási mező -irány-ba lőjön addig, ameddig -irány -1 nem lenne üres vagy miss:
         destroyPlayerShip()
-        return    
+        return
   */
+}
+function markUnavailableCells() {
+  for (let i = 0; i < ownBoard.length; i++) {
+    for (let j = 0; j < ownBoard[i].length; j++) {
+      if (ownBoard[i][j] === 'x') {
+        if (i + 1 < ownBoard.length) {
+          ownBoard[i + 1][j] = 'n';
+        }
+        if (i - 1 >= 0) {
+          ownBoard[i - 1][j] = 'n';
+        }
+        if (j + 1 < ownBoard[i].length) {
+          ownBoard[i][j + 1] = 'n';
+        }
+        if (j - 1 >= 0) {
+          ownBoard[i][j - 1] = 'n';
+        }
+      }
+    }
+  }
 }
 function oldAiShoot(isOver) {
   let x = Math.floor(Math.random() * board.length);
   let y = Math.floor(Math.random() * board.length);
-  if (ownBoard[x][y] !== 'h' && ownBoard[x][y] !== 'm') {
+  console.log(x, y, gamePhase.attackTurn);
+  if (
+    ownBoard[x][y] !== 'h' &&
+    ownBoard[x][y] !== 'm' &&
+    ownBoard[x][y] !== 'n' &&
+    ownBoard[x][y] !== 'x'
+  ) {
     if (
       gamePhase.attackTurn === 'ai' &&
       gamePhase.phase === 'shooting' &&
-      gamePhase.aiHits < gamePhase.shipUnits
+      gamePhase.maxShips !== 0
     ) {
-      if (ownBoard[x][y] !== '' && ownBoard[x][y] !== 'm' && ownBoard[x][y] !== 'h') {
-        gamePhase.aiHits++;
-        ownBoard[x][y] = 'h';
-        displayTextMessage(
-          `AI hit a ship! AI score: ${gamePhase.aiHits}, Player score: ${gamePhase.playerHits}`
-        );
-        if (gamePhase.aiHits === gamePhase.shipUnits) {
+      if (ownBoard[x][y] !== '') {
+        if (ownBoard[x][y] === '1') {
+          gamePhase.aiHits++;
+          ownBoard[x][y] = 'x';
+          gamePhase.maxShips--;
+          markUnavailableCells();
+          displayTextMessage(
+            `AI destroyed a ship! AI score: ${gamePhase.aiHits}, Player score: ${gamePhase.playerHits}`
+          );
+        } else {
+          ownBoard[x][y] = 'h';
+          displayTextMessage(
+            `AI hit a ship! AI score: ${gamePhase.aiHits}, Player score: ${gamePhase.playerHits}`
+          );
+        }
+        if (gamePhase.maxShips === 0) {
           isOver = true;
         }
       } else {
@@ -319,7 +372,6 @@ function oldAiShoot(isOver) {
           `AI missed! AI score: ${gamePhase.aiHits}, Player score: ${gamePhase.playerHits}`
         );
       }
-
       if (isOver) {
         gamePhase.phase = 'end';
         displayMessage(`AI wins`);
@@ -330,6 +382,6 @@ function oldAiShoot(isOver) {
       displayBoard({ boardnumber: 2, board: ownBoard });
     }
   } else {
-    aiShoot(data);
+    oldAiShoot(false);
   }
 }
