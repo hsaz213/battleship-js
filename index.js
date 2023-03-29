@@ -329,16 +329,10 @@ function markUnavailableCells() {
   for (let i = 0; i < ownBoard.length; i++) {
     for (let j = 0; j < ownBoard[i].length; j++) {
       if (ownBoard[i][j] === 'h' || ownBoard[i][j] === 'x') {
-        if (
-          i + 1 < ownBoard.length &&
-          (ownBoard[i + 1][j] === '' || ownBoard[i + 1][j] === 'm')
-        ) {
+        if (i + 1 < ownBoard.length && (ownBoard[i + 1][j] === '' || ownBoard[i + 1][j] === 'm')) {
           ownBoard[i + 1][j] = 'n';
         }
-        if (
-          i - 1 >= 0 &&
-          (ownBoard[i - 1][j] === '' || ownBoard[i - 1][j] === 'm')
-        ) {
+        if (i - 1 >= 0 && (ownBoard[i - 1][j] === '' || ownBoard[i - 1][j] === 'm')) {
           ownBoard[i - 1][j] = 'n';
         }
         if (
@@ -347,10 +341,7 @@ function markUnavailableCells() {
         ) {
           ownBoard[i][j + 1] = 'n';
         }
-        if (
-          j - 1 >= 0 &&
-          (ownBoard[i][j - 1] === '' || ownBoard[i][j - 1] === 'm')
-        ) {
+        if (j - 1 >= 0 && (ownBoard[i][j - 1] === '' || ownBoard[i][j - 1] === 'm')) {
           ownBoard[i][j - 1] = 'n';
         }
       }
@@ -414,24 +405,29 @@ function oldAiShoot() {
 }
 
 function secondAiShoot() {
-  x = gamePhase.currentCell[0];
-  y = gamePhase.currentCell[1];
+  x = Number(gamePhase.currentCell[0]);
+  y = Number(gamePhase.currentCell[1]);
+  console.log(
+    `current cell is ${gamePhase.currentCell}, ownBoard at this cell is${ownBoard[x][y]}`
+  );
+  let hitShip2Long = false;
   if (gamePhase.aiCounter === 0) {
     //jobbra
     console.log('jobb', gamePhase.aiCounter);
     if (
-      ownBoard[x][y + 1] &&
-      ownBoard[x][y + 1] !== 'n' &&
-      ownBoard[x][y + 1] !== 'm'
+      (ownBoard[x][y + 1] && ownBoard[x][y + 1] !== 'n' && ownBoard[x][y + 1] !== 'm') ||
+      (ownBoard[x][y + 1] != undefined && ownBoard[x][y + 1] == '')
     ) {
       if (ownBoard[x][y + 1] == '') {
         ownBoard[x][y + 1] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
         console.log('jobb-m');
       } else {
+        if (ownBoard[x][y + 1] == 2) {
+          hitShip2Long = true;
+        }
         ownBoard[x][y + 1] = 'h';
         displayBoard({ boardnumber: 2, board: ownBoard });
-        gamePhase.maxShips--;
         console.log('jobb-h');
       }
     } else {
@@ -443,18 +439,19 @@ function secondAiShoot() {
     //le
     console.log('le', gamePhase.aiCounter);
     if (
-      ownBoard[x + 1] &&
-      ownBoard[x + 1][y] !== 'n' &&
-      ownBoard[x + 1][y] !== 'm'
+      (ownBoard[x + 1] && ownBoard[x + 1][y] !== 'n' && ownBoard[x + 1][y] !== 'm') ||
+      (ownBoard[x + 1] != undefined && ownBoard[x + 1][y] == '')
     ) {
       if (ownBoard[x + 1][y] == '') {
         ownBoard[x + 1][y] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
         console.log('le-m');
       } else {
+        if (ownBoard[x + 1][y] == 2) {
+          hitShip2Long = true;
+        }
         ownBoard[x + 1][y] = 'h';
         displayBoard({ boardnumber: 2, board: ownBoard });
-        gamePhase.maxShips--;
         console.log('le-h');
       }
     } else {
@@ -466,18 +463,19 @@ function secondAiShoot() {
     //balra
     console.log('bal', gamePhase.aiCounter);
     if (
-      ownBoard[x][y - 1] &&
-      ownBoard[x][y - 1] !== 'n' &&
-      ownBoard[x][y - 1] !== 'm'
+      (ownBoard[x][y - 1] && ownBoard[x][y - 1] !== 'n' && ownBoard[x][y - 1] !== 'm') ||
+      (ownBoard[x][y - 1] != undefined && ownBoard[x][y - 1] == '')
     ) {
       if (ownBoard[x][y - 1] == '') {
         ownBoard[x][y - 1] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
         console.log('bal-m');
       } else {
+        if (ownBoard[x][y - 1] == 2) {
+          hitShip2Long = true;
+        }
         ownBoard[x][y - 1] = 'h';
         displayBoard({ boardnumber: 2, board: ownBoard });
-        gamePhase.maxShips--;
         console.log('bal-h');
       }
     } else {
@@ -489,18 +487,19 @@ function secondAiShoot() {
     //fel
     console.log('fel', gamePhase.aiCounter);
     if (
-      ownBoard[x - 1] &&
-      ownBoard[x - 1][y] !== 'n' &&
-      ownBoard[x - 1][y] !== 'm'
+      (ownBoard[x - 1] && ownBoard[x - 1][y] !== 'n' && ownBoard[x - 1][y] !== 'm') ||
+      (ownBoard[x - 1] != undefined && ownBoard[x - 1][y])
     ) {
       if (ownBoard[x - 1][y] == '') {
         ownBoard[x - 1][y] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
         console.log('fel-m');
       } else {
+        if (ownBoard[x - 1][y] == 2) {
+          hitShip2Long = true;
+        }
         ownBoard[x - 1][y] = 'h';
         displayBoard({ boardnumber: 2, board: ownBoard });
-        gamePhase.maxShips--;
         console.log('fel-h');
       }
     } else {
@@ -508,17 +507,18 @@ function secondAiShoot() {
     }
     console.log('fel', gamePhase.aiCounter);
   }
-  //ha kettes hajó --> destroy
+
   displayBoard({ boardnumber: 2, board: ownBoard });
+
+  //ha kettes hajó volt --> destroy
   const aiCurrentHits = countAIHits();
-  if (aiCurrentHits === 2 && gamePhase.shipTypes.sort().reverse()[0] > 2) {
+  if (aiCurrentHits === 2 && hitShip2Long == true) {
     destroyPlayerShip();
+    markUnavailableCells();
+    gamePhase.maxShips--;
     gamePhase.aiCounter = 0;
     console.log('destroyed');
-  } else {
-    //
   }
-  console.log(gamePhase.aiCounter);
 
   //if over
   const shipCount = shipDetector();
