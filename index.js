@@ -15,7 +15,8 @@ const gamePhase = {
   shipTypes: [],
   aiHits: 0,
   playerHits: 0,
-  shipUnits: 0
+  shipUnits: 0,
+  aiCounter: 0
 };
 
 function selectGame(data) {
@@ -51,6 +52,7 @@ function resetGamePhase() {
   gamePhase.clicks = 0;
   gamePhase.aiHits = 0;
   gamePhase.playerHits = 0;
+  gamePhase.aiCounter = 0;
 }
 
 function generateSettings(data) {
@@ -281,7 +283,13 @@ function aiShoot(originalData) {
   console.log(originalData);
   let isOver = false;
   const aiCurrentHits = countAIHits();
-  oldAiShoot(isOver);
+  if (aiCurrentHits === 0) {
+    oldAiShoot(isOver);
+  } else if (aiCurrentHits === 1) {
+    secondAiShoot(isOver);
+  } else {
+    thirdAiShoot(isOver);
+  }
   /*
     function: aiCurrentHits(), süllyedt=destroyPlayerShip()
     globális... számláló a körbelövéshez, kiindulási mező a 2. 3. részhez, irány a 3. részhez
@@ -362,6 +370,7 @@ function oldAiShoot(isOver) {
           displayTextMessage(
             `AI hit a ship! AI score: ${gamePhase.aiHits}, Player score: ${gamePhase.playerHits}`
           );
+          gamePhase.currentCell = [x, y];
         }
         if (gamePhase.maxShips === 0) {
           isOver = true;
@@ -384,4 +393,33 @@ function oldAiShoot(isOver) {
   } else {
     oldAiShoot(false);
   }
+}
+
+function secondAiShoot(isOver) {
+  x = gamePhase.currentCell[0];
+  x = gamePhase.currentCell[1];
+
+  if (aiCounter === 0) {
+    //jobbra
+    if (
+      ownBoard[x][y + 1] &&
+      ownBoard[x][y + 1] !== '' &&
+      ownBoard[x][y + 1] !== 'n' &&
+      ownBoard[x][y + 1] !== 'm'
+    ) {
+      //
+    }
+  }
+  if (aiCounter === 1) {
+    //le
+  }
+  if (aiCounter === 2) {
+    //balra
+  }
+  if (aiCounter === 3) {
+    //fel
+  }
+}
+function thirdAiShoot(isOver) {
+  //
 }
