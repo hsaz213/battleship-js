@@ -286,9 +286,9 @@ function aiShoot(originalData) {
   if (aiCurrentHits === 0) {
     oldAiShoot(isOver);
   } else if (aiCurrentHits === 1) {
-    secondAiShoot(isOver);
+    secondAiShoot();
   } else {
-    thirdAiShoot(isOver);
+    thirdAiShoot();
   }
   /*
     function: aiCurrentHits(), süllyedt=destroyPlayerShip()
@@ -324,23 +324,36 @@ function aiShoot(originalData) {
 function markUnavailableCells() {
   for (let i = 0; i < ownBoard.length; i++) {
     for (let j = 0; j < ownBoard[i].length; j++) {
-      if (ownBoard[i][j] === 'x') {
-        if (i + 1 < ownBoard.length) {
+      if (ownBoard[i][j] === 'h' || ownBoard[i][j] === 'x') {
+        if (
+          i + 1 < ownBoard.length &&
+          (ownBoard[i + 1][j] === '' || ownBoard[i + 1][j] === 'm')
+        ) {
           ownBoard[i + 1][j] = 'n';
         }
-        if (i - 1 >= 0) {
+        if (
+          i - 1 >= 0 &&
+          (ownBoard[i - 1][j] === '' || ownBoard[i - 1][j] === 'm')
+        ) {
           ownBoard[i - 1][j] = 'n';
         }
-        if (j + 1 < ownBoard[i].length) {
+        if (
+          j + 1 < ownBoard[i].length &&
+          (ownBoard[i][j + 1] === '' || ownBoard[i][j + 1] === 'm')
+        ) {
           ownBoard[i][j + 1] = 'n';
         }
-        if (j - 1 >= 0) {
+        if (
+          j - 1 >= 0 &&
+          (ownBoard[i][j - 1] === '' || ownBoard[i][j - 1] === 'm')
+        ) {
           ownBoard[i][j - 1] = 'n';
         }
       }
     }
   }
 }
+
 function oldAiShoot(isOver) {
   let x = Math.floor(Math.random() * board.length);
   let y = Math.floor(Math.random() * board.length);
@@ -395,10 +408,10 @@ function oldAiShoot(isOver) {
   }
 }
 
-function secondAiShoot(isOver) {
+function secondAiShoot() {
   x = gamePhase.currentCell[0];
   y = gamePhase.currentCell[1];
-
+  console.log(gamePhase.aiCounter);
   if (gamePhase.aiCounter === 0) {
     //jobbra
     console.log('jobb', gamePhase.aiCounter);
@@ -407,9 +420,19 @@ function secondAiShoot(isOver) {
       ownBoard[x][y + 1] !== 'n' &&
       ownBoard[x][y + 1] !== 'm'
     ) {
-      console.log('jobb-ok');
+      if (ownBoard[x][y + 1] === '') {
+        ownBoard[x][y + 1] = 'm';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        console.log('jobb-m');
+      } else {
+        ownBoard[x][y + 1] = 'h';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        gamePhase.maxShips--;
+        console.log('jobb-h');
+      }
+    } else {
+      gamePhase.aiCounter++;
     }
-    gamePhase.aiCounter++;
     console.log('jobb', gamePhase.aiCounter);
   }
   if (gamePhase.aiCounter === 1) {
@@ -420,9 +443,19 @@ function secondAiShoot(isOver) {
       ownBoard[x + 1][y] !== 'n' &&
       ownBoard[x + 1][y] !== 'm'
     ) {
-      console.log('le-ok');
+      if (ownBoard[x + 1][y] === '') {
+        ownBoard[x + 1][y] = 'm';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        console.log('le-m');
+      } else {
+        ownBoard[x + 1][y] = 'h';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        gamePhase.maxShips--;
+        console.log('le-h');
+      }
+    } else {
+      gamePhase.aiCounter++;
     }
-    gamePhase.aiCounter++;
     console.log('le', gamePhase.aiCounter);
   }
   if (gamePhase.aiCounter === 2) {
@@ -433,9 +466,19 @@ function secondAiShoot(isOver) {
       ownBoard[x][y - 1] !== 'n' &&
       ownBoard[x][y - 1] !== 'm'
     ) {
-      console.log('bal-ok');
+      if (ownBoard[x][y - 1] === '') {
+        ownBoard[x][y - 1] = 'm';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        console.log('bal-m');
+      } else {
+        ownBoard[x][y - 1] = 'h';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        gamePhase.maxShips--;
+        console.log('bal-h');
+      }
+    } else {
+      gamePhase.aiCounter++;
     }
-    gamePhase.aiCounter++;
     console.log('bal', gamePhase.aiCounter);
   }
   if (gamePhase.aiCounter === 3) {
@@ -446,13 +489,44 @@ function secondAiShoot(isOver) {
       ownBoard[x - 1][y] !== 'n' &&
       ownBoard[x - 1][y] !== 'm'
     ) {
-      console.log('fel-ok');
+      if (ownBoard[x - 1][y] === '') {
+        ownBoard[x - 1][y] = 'm';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        console.log('fel-m');
+      } else {
+        ownBoard[x - 1][y] = 'h';
+        displayBoard({ boardnumber: 2, board: ownBoard });
+        gamePhase.maxShips--;
+        console.log('fel-h');
+      }
+    } else {
+      gamePhase.aiCounter++;
     }
-    gamePhase.aiCounter++;
     console.log('fel', gamePhase.aiCounter);
   }
+  //ha kettes hajó --> destroy
+  displayBoard({ boardnumber: 2, board: ownBoard });
+  const aiCurrentHits = countAIHits();
+  if (aiCurrentHits === 2) {
+    destroyPlayerShip();
+    displayBoard({ boardnumber: 2, board: ownBoard });
+    gamePhase.aiCounter = 0;
+    console.log('destroyed');
+  } else {
+    console.log('missed, counter:', gamePhase.aiCounter);
+  }
   console.log(gamePhase.aiCounter);
+
+  //if over
+  if (gamePhase.maxShips === 0) {
+    gamePhase.phase = 'end';
+    displayMessage(`AI wins`);
+  } else {
+    gamePhase.attackTurn = 'player';
+    displayMessage(`Player's turn`, 'black');
+  }
+  displayBoard({ boardnumber: 2, board: ownBoard });
 }
 function thirdAiShoot(isOver) {
-  //
+  console.log('thirdAiShoot');
 }
