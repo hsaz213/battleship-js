@@ -397,28 +397,61 @@ function oldAiShoot(isOver) {
 
 function secondAiShoot(isOver) {
   x = gamePhase.currentCell[0];
-  x = gamePhase.currentCell[1];
+  y = gamePhase.currentCell[1];
 
-  if (aiCounter === 0) {
+  if (gamePhase.aiCounter === 0) {
     //jobbra
+    console.log('jobb', gamePhase.aiCounter);
     if (
       ownBoard[x][y + 1] &&
-      ownBoard[x][y + 1] !== '' &&
       ownBoard[x][y + 1] !== 'n' &&
       ownBoard[x][y + 1] !== 'm'
     ) {
-      //
+      console.log('jobb-ok');
     }
+    gamePhase.aiCounter++;
+    console.log('jobb', gamePhase.aiCounter);
   }
-  if (aiCounter === 1) {
+  if (gamePhase.aiCounter === 1) {
     //le
+    console.log('le', gamePhase.aiCounter);
+    if (
+      ownBoard[x + 1] &&
+      ownBoard[x + 1][y] !== 'n' &&
+      ownBoard[x + 1][y] !== 'm'
+    ) {
+      console.log('le-ok');
+    }
+    gamePhase.aiCounter++;
+    console.log('le', gamePhase.aiCounter);
   }
-  if (aiCounter === 2) {
+  if (gamePhase.aiCounter === 2) {
     //balra
+    console.log('bal', gamePhase.aiCounter);
+    if (
+      ownBoard[x][y - 1] &&
+      ownBoard[x][y - 1] !== 'n' &&
+      ownBoard[x][y - 1] !== 'm'
+    ) {
+      console.log('bal-ok');
+    }
+    gamePhase.aiCounter++;
+    console.log('bal', gamePhase.aiCounter);
   }
-  if (aiCounter === 3) {
+  if (gamePhase.aiCounter === 3) {
     //fel
+    console.log('fel', gamePhase.aiCounter);
+    if (
+      ownBoard[x - 1] &&
+      ownBoard[x - 1][y] !== 'n' &&
+      ownBoard[x - 1][y] !== 'm'
+    ) {
+      console.log('fel-ok');
+    }
+    gamePhase.aiCounter++;
+    console.log('fel', gamePhase.aiCounter);
   }
+  console.log(gamePhase.aiCounter);
 }
 function thirdAiShoot(isOver) {
   //
