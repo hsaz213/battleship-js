@@ -262,7 +262,7 @@ function destroyPlayerShip() {
     }
   }
 }
-function shipDetector(board) {
+function shipDetector() {
   let counter = 0;
   for (let i = 0; i < ownBoard.length; i++) {
     for (let j = 0; j < ownBoard[i].length; j++) {
@@ -277,6 +277,7 @@ function shipDetector(board) {
       }
     }
   }
+  console.log('shipDetector detected', counter, 'ships');
   return counter;
 }
 function aiShoot(originalData) {
@@ -287,7 +288,7 @@ function aiShoot(originalData) {
       oldAiShoot();
     } else if (aiCurrentHits === 1) {
       secondAiShoot();
-    } else {
+    } else if (aiCurrentHits >= 2) {
       thirdAiShoot();
     }
   } else {
@@ -415,8 +416,6 @@ function oldAiShoot() {
 function secondAiShoot() {
   x = gamePhase.currentCell[0];
   y = gamePhase.currentCell[1];
-  console.log(y + 1, typeof y, typeof (y + 1));
-  console.log(gamePhase.aiCounter);
   if (gamePhase.aiCounter === 0) {
     //jobbra
     console.log('jobb', gamePhase.aiCounter);
@@ -517,7 +516,7 @@ function secondAiShoot() {
     gamePhase.aiCounter = 0;
     console.log('destroyed');
   } else {
-    console.log('missed, counter:', gamePhase.aiCounter);
+    //
   }
   console.log(gamePhase.aiCounter);
 
@@ -526,12 +525,17 @@ function secondAiShoot() {
   if (shipCount == 0) {
     gamePhase.phase = 'end';
     displayMessage(`AI wins`);
+  } else if (aiCurrentHits !== 0) {
+    gamePhase.attackTurn = 'player';
+    displayTextMessage('Ai missed in secondAiShoot');
+    displayMessage(`Player's turn`, 'black');
   } else {
     gamePhase.attackTurn = 'player';
     displayMessage(`Player's turn`, 'black');
+    displayTextMessage('Ai hit in secondAiShoot');
   }
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
 function thirdAiShoot() {
-  console.log('thirdAiShoot');
+  console.log('thirdAiShoot', gamePhase.aiCounter);
 }
