@@ -719,7 +719,15 @@ function thirdAiShoot() {
   if (gamePhase.directionCleared && gamePhase.attackTurn === 'ai') {
     displayBoard({ boardnumber: 2, board: ownBoard });
     console.clear();
-    console.log('asd', gamePhase);
+    console.log(
+      'asd',
+      gamePhase,
+      ownBoard[x][y],
+      ownBoard[x + 1][y],
+      ownBoard[x - 1][y],
+      ownBoard[x][y + 1],
+      ownBoard[x][y - 1]
+    );
     let destroyed = false;
 
     //if it exists and is not a miss, shoot in direction[0]+aiCounter+2
