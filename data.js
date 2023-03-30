@@ -8,5 +8,6 @@ const data = {
   game7: 'size:2,s:{s1:a1,s2:b2}',
   game8: 'size:3,s:{s1:a1b1,s2:c3}',
   game9: 'size:3,s:{s1:a1b1c1}',
-  game10: 'size:4,s:{s1:a1b1c1d1}'
+  game10: 'size:4,s:{s1:a1b1c1d1}',
+  game11: 'size:5,s:{s1:a1b1c1d1,s2:a3b3c3d3}'
 };
