@@ -360,11 +360,8 @@ function markUnavailableCells() {
 
 function oldAiShoot() {
   let isOver = false;
-  let x = 3;
-  let y = 0;
-  /*
   let x = Math.floor(Math.random() * board.length);
-  let y = Math.floor(Math.random() * board.length);*/
+  let y = Math.floor(Math.random() * board.length);
 
   if (
     ownBoard[x][y] !== 'h' &&
@@ -519,7 +516,6 @@ function secondAiShoot() {
     markUnavailableCells();
     gamePhase.maxShips--;
     gamePhase.aiCounter = 0;
-
     aiCurrentHits = 0;
   }
 
@@ -532,6 +528,8 @@ function secondAiShoot() {
     gamePhase.attackTurn = 'player';
     displayTextMessage('Ai missed in secondAiShoot');
     displayMessage(`Player's turn`, 'black');
+    hitShip2Long = false;
+    aiCurrentHits = 0;
   }
 
   //secondAiShoot successful, move on to thirdAiShoot
@@ -540,6 +538,8 @@ function secondAiShoot() {
     gamePhase.aiCounter = 0;
     displayMessage(`Player's turn`, 'black');
     displayTextMessage('Ai hit in secondAiShoot');
+    hitShip2Long = false;
+    aiCurrentHits = 0;
   }
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
@@ -551,11 +551,8 @@ function thirdAiShoot() {
   const y = gamePhase.currentCell[1];
   let currentShipSize = 0;
 
-  console.log(gamePhase, '1');
-
   //start shooting in the first direction and then switch direction to opposite
   if (!gamePhase.directionCleared) {
-    console.log(gamePhase, '2');
     //look around for second and possibly third 'h'
     if (ownBoard[x][y + 1] != undefined && ownBoard[x][y + 1] === 'h') {
       gamePhase.direction = 'r';
@@ -696,7 +693,6 @@ function thirdAiShoot() {
       gamePhase.direction = changeDirection(gamePhase.direction);
       gamePhase.directionCleared = true;
       displayBoard({ boardnumber: 2, board: ownBoard });
-      console.log(gamePhase, '2');
     }
     //
 
@@ -715,19 +711,9 @@ function thirdAiShoot() {
   }
 
   //changed direction
-  console.log('3', gamePhase);
   if (gamePhase.directionCleared && gamePhase.attackTurn === 'ai') {
     displayBoard({ boardnumber: 2, board: ownBoard });
     console.clear();
-    console.log(
-      'asd',
-      gamePhase,
-      ownBoard[x][y],
-      ownBoard[x + 1][y],
-      ownBoard[x - 1][y],
-      ownBoard[x][y + 1],
-      ownBoard[x][y - 1]
-    );
     let destroyed = false;
 
     //if it exists and is not a miss, shoot in direction+aiCounter+2
@@ -775,13 +761,13 @@ function thirdAiShoot() {
         ownBoard[x][y - gamePhase.aiCounter - 1] != 'h'
       ) {
         currentShipSize = Number(ownBoard[x][y - gamePhase.aiCounter - 1]);
-        if (ownBoard[x][y - gamePhase.aiCounter - 1] == '') {
+        if (Number(ownBoard[x][y - gamePhase.aiCounter - 1]) > 1) {
+          ownBoard[x][y - gamePhase.aiCounter - 1] = 'h';
+          gamePhase.aiCounter++;
+        } else {
           ownBoard[x][y - gamePhase.aiCounter - 1] = 'm';
           gamePhase.aiCounter = 0;
           destroyed = true;
-        } else {
-          ownBoard[x][y - gamePhase.aiCounter - 1] = 'h';
-          gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
@@ -806,13 +792,13 @@ function thirdAiShoot() {
         ownBoard[x + gamePhase.aiCounter + 1][y] != 'h'
       ) {
         currentShipSize = Number(ownBoard[x + gamePhase.aiCounter + 1][y]);
-        if (ownBoard[x + gamePhase.aiCounter + 1][y] == '') {
+        if (ownBoard[x + gamePhase.aiCounter + 1][y] > 1) {
+          ownBoard[x + gamePhase.aiCounter + 1][y] = 'h';
+          gamePhase.aiCounter++;
+        } else {
           ownBoard[x + gamePhase.aiCounter + 1][y] = 'm';
           gamePhase.aiCounter = 0;
           destroyed = true;
-        } else {
-          ownBoard[x + gamePhase.aiCounter + 1][y] = 'h';
-          gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
@@ -836,13 +822,13 @@ function thirdAiShoot() {
         ownBoard[x][y + gamePhase.aiCounter + 1] != 'h'
       ) {
         currentShipSize = Number(ownBoard[x][y + gamePhase.aiCounter + 1]);
-        if (ownBoard[x][y + gamePhase.aiCounter + 1] == '') {
+        if (Number(ownBoard[x][y + gamePhase.aiCounter + 1]) > 1) {
+          ownBoard[x][y + gamePhase.aiCounter + 1] = 'h';
+          gamePhase.aiCounter++;
+        } else {
           ownBoard[x][y + gamePhase.aiCounter + 1] = 'm';
           gamePhase.aiCounter = 0;
           destroyed = true;
-        } else {
-          ownBoard[x][y + gamePhase.aiCounter + 1] = 'h';
-          gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
@@ -863,10 +849,21 @@ function thirdAiShoot() {
       gamePhase.aiCounter = 0;
     }
     gamePhase.attackTurn = 'player';
+    displayTextMessage('Players turn');
     displayBoard({ boardnumber: 2, board: ownBoard });
   }
 
   displayBoard({ boardnumber: 2, board: ownBoard });
+  //if over
+  const shipCount = shipDetector();
+  if (shipCount == 0) {
+    gamePhase.phase = 'end';
+    displayMessage(`AI wins`);
+  } else if (aiCurrentHits === 1) {
+    gamePhase.attackTurn = 'player';
+    displayTextMessage('Ai missed in secondAiShoot');
+    displayMessage(`Player's turn`, 'black');
+  }
 }
 
 function changeDirection(dir) {
