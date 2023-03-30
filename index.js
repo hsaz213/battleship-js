@@ -545,6 +545,8 @@ function secondAiShoot() {
   displayBoard({ boardnumber: 2, board: ownBoard });
   console.clear();
 }
+
+//third part of ai logic
 function thirdAiShoot() {
   console.log(
     'thirdAiShoot, aiCounter=',
