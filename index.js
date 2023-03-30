@@ -18,7 +18,7 @@ const gamePhase = {
   shipUnits: 0,
   aiCounter: 0,
   directionCleared: false,
-  direction: []
+  direction: ''
 };
 
 function selectGame(data) {
@@ -549,29 +549,31 @@ function thirdAiShoot() {
   displayBoard({ boardnumber: 2, board: ownBoard });
   const x = gamePhase.currentCell[0];
   const y = gamePhase.currentCell[1];
-  //look around for second and possibly third 'h'
-  if (ownBoard[x][y + 1] != undefined && ownBoard[x][y + 1] === 'h') {
-    gamePhase.direction.push('r');
-  }
-  if (ownBoard[x + 1] != undefined && ownBoard[x + 1][y] === 'h') {
-    gamePhase.direction.push('d');
-  }
-  if (ownBoard[x][y - 1] != undefined && ownBoard[x][y - 1] === 'h') {
-    gamePhase.direction.push('l');
-  }
-  if (ownBoard[x - 1] != undefined && ownBoard[x - 1][y] === 'h') {
-    gamePhase.direction.push('u');
-  }
-
   let currentShipSize = 0;
 
+  console.log(gamePhase, '1');
+
   //start shooting in the first direction and then switch direction to opposite
-  if (gamePhase.direction.length < 2) {
+  if (!gamePhase.directionCleared) {
+    console.log(gamePhase, '2');
+    //look around for second and possibly third 'h'
+    if (ownBoard[x][y + 1] != undefined && ownBoard[x][y + 1] === 'h') {
+      gamePhase.direction = 'r';
+    }
+    if (ownBoard[x + 1] != undefined && ownBoard[x + 1][y] === 'h') {
+      gamePhase.direction = 'd';
+    }
+    if (ownBoard[x][y - 1] != undefined && ownBoard[x][y - 1] === 'h') {
+      gamePhase.direction = 'l';
+    }
+    if (ownBoard[x - 1] != undefined && ownBoard[x - 1][y] === 'h') {
+      gamePhase.direction = 'u';
+    }
     //if it exists and is not a miss, shoot in direction[0]+aiCounter+2
     //right
     if (
       ownBoard[x][y + gamePhase.aiCounter + 2] != undefined &&
-      gamePhase.direction[0] == 'r'
+      gamePhase.direction == 'r'
     ) {
       if (
         ownBoard[x][y + gamePhase.aiCounter + 2] != 'm' &&
@@ -582,7 +584,8 @@ function thirdAiShoot() {
         if (ownBoard[x][y + gamePhase.aiCounter + 2] == '') {
           ownBoard[x][y + gamePhase.aiCounter + 2] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+          gamePhase.direction = changeDirection(gamePhase.direction);
+          gamePhase.directionCleared = true;
         } else {
           ownBoard[x][y + gamePhase.aiCounter + 2] = 'h';
           gamePhase.aiCounter++;
@@ -591,16 +594,17 @@ function thirdAiShoot() {
       }
     } else if (
       ownBoard[x][y + gamePhase.aiCounter + 2] == undefined &&
-      gamePhase.direction[0] == 'r'
+      gamePhase.direction == 'r'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+      gamePhase.direction = changeDirection(gamePhase.direction);
+      gamePhase.directionCleared = true;
     }
     //
     //down
     else if (
       ownBoard[x + gamePhase.aiCounter + 2] != undefined &&
-      gamePhase.direction[0] == 'd'
+      gamePhase.direction == 'd'
     ) {
       if (
         ownBoard[x + gamePhase.aiCounter + 2][y] != undefined &&
@@ -612,7 +616,8 @@ function thirdAiShoot() {
         if (ownBoard[x + gamePhase.aiCounter + 2][y] == '') {
           ownBoard[x + gamePhase.aiCounter + 2][y] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+          gamePhase.direction = changeDirection(gamePhase.direction);
+          gamePhase.directionCleared = true;
         } else {
           ownBoard[x + gamePhase.aiCounter + 2][y] = 'h';
           gamePhase.aiCounter++;
@@ -621,17 +626,17 @@ function thirdAiShoot() {
       }
     } else if (
       ownBoard[x + gamePhase.aiCounter + 2] == undefined &&
-      gamePhase.direction[0] == 'd'
+      gamePhase.direction == 'd'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
-      displayBoard({ boardnumber: 2, board: ownBoard });
+      gamePhase.direction = changeDirection(gamePhase.direction);
+      gamePhase.directionCleared = true;
     }
     //
     //left
     else if (
       ownBoard[x][y - gamePhase.aiCounter - 2] != undefined &&
-      gamePhase.direction[0] == 'l'
+      gamePhase.direction == 'l'
     ) {
       if (
         ownBoard[x][y - gamePhase.aiCounter - 2] != undefined &&
@@ -643,7 +648,8 @@ function thirdAiShoot() {
         if (ownBoard[x][y - gamePhase.aiCounter - 2] == '') {
           ownBoard[x][y - gamePhase.aiCounter - 2] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+          gamePhase.direction = changeDirection(gamePhase.direction);
+          gamePhase.directionCleared = true;
         } else {
           ownBoard[x][y - gamePhase.aiCounter - 2] = 'h';
           gamePhase.aiCounter++;
@@ -652,17 +658,17 @@ function thirdAiShoot() {
       }
     } else if (
       ownBoard[x][y - gamePhase.aiCounter - 2] == undefined &&
-      gamePhase.direction[0] == 'l'
+      gamePhase.direction == 'l'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
-      displayBoard({ boardnumber: 2, board: ownBoard });
+      gamePhase.direction = changeDirection(gamePhase.direction);
+      gamePhase.directionCleared = true;
     }
     //
     //up
     else if (
       ownBoard[x - gamePhase.aiCounter - 2] != undefined &&
-      gamePhase.direction[0] == 'u'
+      gamePhase.direction == 'u'
     ) {
       if (
         ownBoard[x - gamePhase.aiCounter - 2][y] != undefined &&
@@ -674,7 +680,8 @@ function thirdAiShoot() {
         if (ownBoard[x - gamePhase.aiCounter - 2][y] == '') {
           ownBoard[x - gamePhase.aiCounter - 2][y] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+          gamePhase.direction = changeDirection(gamePhase.direction);
+          gamePhase.directionCleared = true;
         } else {
           ownBoard[x - gamePhase.aiCounter - 2][y] = 'h';
           gamePhase.aiCounter++;
@@ -683,11 +690,13 @@ function thirdAiShoot() {
       }
     } else if (
       ownBoard[x - gamePhase.aiCounter - 2] == undefined &&
-      gamePhase.direction[0] == 'u'
+      gamePhase.direction == 'u'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[0]));
+      gamePhase.direction = changeDirection(gamePhase.direction);
+      gamePhase.directionCleared = true;
       displayBoard({ boardnumber: 2, board: ownBoard });
+      console.log(gamePhase, '2');
     }
     //
 
@@ -698,6 +707,7 @@ function thirdAiShoot() {
       markUnavailableCells();
       gamePhase.maxShips--;
       gamePhase.aiCounter = 0;
+      gamePhase.directionCleared = false;
     }
     gamePhase.attackTurn = 'player';
     displayMessage(`Player's turn`, 'black');
@@ -705,140 +715,140 @@ function thirdAiShoot() {
   }
 
   //changed direction
-  console.log(gamePhase.direction.length);
-  if (gamePhase.direction.length >= 2 && gamePhase.attackTurn === 'ai') {
+  console.log('3', gamePhase);
+  if (gamePhase.directionCleared && gamePhase.attackTurn === 'ai') {
     displayBoard({ boardnumber: 2, board: ownBoard });
     console.clear();
     console.log('asd', gamePhase);
-    let currentShipSize = 0;
+    let destroyed = false;
 
     //if it exists and is not a miss, shoot in direction[0]+aiCounter+2
     //right
     if (
-      ownBoard[x][y + gamePhase.aiCounter + 2] != undefined &&
-      gamePhase.direction[1] == 'r'
+      ownBoard[x][y + gamePhase.aiCounter + 1] != undefined &&
+      gamePhase.direction == 'r'
     ) {
       if (
-        ownBoard[x][y + gamePhase.aiCounter + 2] != 'm' &&
-        ownBoard[x][y + gamePhase.aiCounter + 2] != 'n' &&
-        ownBoard[x][y + gamePhase.aiCounter + 2] != 'h'
+        ownBoard[x][y + gamePhase.aiCounter + 1] != 'm' &&
+        ownBoard[x][y + gamePhase.aiCounter + 1] != 'n' &&
+        ownBoard[x][y + gamePhase.aiCounter + 1] != 'h'
       ) {
-        currentShipSize = Number(ownBoard[x][y + gamePhase.aiCounter + 2]);
-        if (ownBoard[x][y + gamePhase.aiCounter + 2] == '') {
-          ownBoard[x][y + gamePhase.aiCounter + 2] = 'm';
+        currentShipSize = Number(ownBoard[x][y + gamePhase.aiCounter + 1]);
+        if (ownBoard[x][y + gamePhase.aiCounter + 1] == '') {
+          ownBoard[x][y + gamePhase.aiCounter + 1] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+          destroyed = true;
         } else {
-          ownBoard[x][y + gamePhase.aiCounter + 2] = 'h';
+          ownBoard[x][y + gamePhase.aiCounter + 1] = 'h';
           gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
     } else if (
-      ownBoard[x][y + gamePhase.aiCounter + 2] == undefined &&
+      ownBoard[x][y + gamePhase.aiCounter + 1] == undefined &&
       gamePhase.direction[1] == 'r'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+      destroyed = true;
     }
     //
     //down
     else if (
-      ownBoard[x + gamePhase.aiCounter + 2] != undefined &&
+      ownBoard[x + gamePhase.aiCounter + 1] != undefined &&
       gamePhase.direction[1] == 'd'
     ) {
       if (
-        ownBoard[x + gamePhase.aiCounter + 2][y] != undefined &&
-        ownBoard[x + gamePhase.aiCounter + 2][y] != 'm' &&
-        ownBoard[x + gamePhase.aiCounter + 2][y] != 'n' &&
-        ownBoard[x + gamePhase.aiCounter + 2][y] != 'h'
+        ownBoard[x + gamePhase.aiCounter + 1][y] != undefined &&
+        ownBoard[x + gamePhase.aiCounter + 1][y] != 'm' &&
+        ownBoard[x + gamePhase.aiCounter + 1][y] != 'n' &&
+        ownBoard[x + gamePhase.aiCounter + 1][y] != 'h'
       ) {
-        currentShipSize = Number(ownBoard[x + gamePhase.aiCounter + 2][y]);
-        if (ownBoard[x + gamePhase.aiCounter + 2][y] == '') {
-          ownBoard[x + gamePhase.aiCounter + 2][y] = 'm';
+        currentShipSize = Number(ownBoard[x + gamePhase.aiCounter + 1][y]);
+        if (ownBoard[x + gamePhase.aiCounter + 1][y] == '') {
+          ownBoard[x + gamePhase.aiCounter + 1][y] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+          destroyed = true;
         } else {
-          ownBoard[x + gamePhase.aiCounter + 2][y] = 'h';
+          ownBoard[x + gamePhase.aiCounter + 1][y] = 'h';
           gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
     } else if (
-      ownBoard[x + gamePhase.aiCounter + 2] == undefined &&
+      ownBoard[x + gamePhase.aiCounter + 1] == undefined &&
       gamePhase.direction[1] == 'd'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+      destroyed = true;
       displayBoard({ boardnumber: 2, board: ownBoard });
     }
     //
     //left
     else if (
-      ownBoard[x][y - gamePhase.aiCounter - 2] != undefined &&
+      ownBoard[x][y - gamePhase.aiCounter - 1] != undefined &&
       gamePhase.direction[1] == 'l'
     ) {
       if (
-        ownBoard[x][y - gamePhase.aiCounter - 2] != undefined &&
-        ownBoard[x][y - gamePhase.aiCounter - 2] != 'm' &&
-        ownBoard[x][y - gamePhase.aiCounter - 2] != 'n' &&
-        ownBoard[x][y - gamePhase.aiCounter - 2] != 'h'
+        ownBoard[x][y - gamePhase.aiCounter - 1] != undefined &&
+        ownBoard[x][y - gamePhase.aiCounter - 1] != 'm' &&
+        ownBoard[x][y - gamePhase.aiCounter - 1] != 'n' &&
+        ownBoard[x][y - gamePhase.aiCounter - 1] != 'h'
       ) {
-        currentShipSize = Number(ownBoard[x][y - gamePhase.aiCounter - 2]);
-        if (ownBoard[x][y - gamePhase.aiCounter - 2] == '') {
-          ownBoard[x][y - gamePhase.aiCounter - 2] = 'm';
+        currentShipSize = Number(ownBoard[x][y - gamePhase.aiCounter - 1]);
+        if (ownBoard[x][y - gamePhase.aiCounter - 1] == '') {
+          ownBoard[x][y - gamePhase.aiCounter - 1] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+          destroyed = true;
         } else {
-          ownBoard[x][y - gamePhase.aiCounter - 2] = 'h';
+          ownBoard[x][y - gamePhase.aiCounter - 1] = 'h';
           gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
     } else if (
-      ownBoard[x][y - gamePhase.aiCounter - 2] == undefined &&
+      ownBoard[x][y - gamePhase.aiCounter - 1] == undefined &&
       gamePhase.direction[1] == 'l'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+      destroyed = true;
       displayBoard({ boardnumber: 2, board: ownBoard });
     }
     //
     //up
     else if (
-      ownBoard[x - gamePhase.aiCounter - 2] != undefined &&
+      ownBoard[x - gamePhase.aiCounter - 1] != undefined &&
       gamePhase.direction[1] == 'u'
     ) {
       if (
-        ownBoard[x - gamePhase.aiCounter - 2][y] != undefined &&
-        ownBoard[x - gamePhase.aiCounter - 2][y] != 'm' &&
-        ownBoard[x - gamePhase.aiCounter - 2][y] != 'n' &&
-        ownBoard[x - gamePhase.aiCounter - 2][y] != 'h'
+        ownBoard[x - gamePhase.aiCounter - 1][y] != undefined &&
+        ownBoard[x - gamePhase.aiCounter - 1][y] != 'm' &&
+        ownBoard[x - gamePhase.aiCounter - 1][y] != 'n' &&
+        ownBoard[x - gamePhase.aiCounter - 1][y] != 'h'
       ) {
-        currentShipSize = Number(ownBoard[x - gamePhase.aiCounter - 2][y]);
-        if (ownBoard[x - gamePhase.aiCounter - 2][y] == '') {
-          ownBoard[x - gamePhase.aiCounter - 2][y] = 'm';
+        currentShipSize = Number(ownBoard[x - gamePhase.aiCounter - 1][y]);
+        if (ownBoard[x - gamePhase.aiCounter - 1][y] == '') {
+          ownBoard[x - gamePhase.aiCounter - 1][y] = 'm';
           gamePhase.aiCounter = 0;
-          gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+          destroyed = true;
         } else {
-          ownBoard[x - gamePhase.aiCounter - 2][y] = 'h';
+          ownBoard[x - gamePhase.aiCounter - 1][y] = 'h';
           gamePhase.aiCounter++;
         }
         displayBoard({ boardnumber: 2, board: ownBoard });
       }
     } else if (
-      ownBoard[x - gamePhase.aiCounter - 2] == undefined &&
+      ownBoard[x - gamePhase.aiCounter - 1] == undefined &&
       gamePhase.direction[1] == 'u'
     ) {
       gamePhase.aiCounter = 0;
-      gamePhase.direction.push(changeDirection(gamePhase.direction[1]));
+      destroyed = true;
       displayBoard({ boardnumber: 2, board: ownBoard });
     }
     //
 
     //if ship is destroyed
-    let aiCurrentHits = countAIHits();
-    if (aiCurrentHits == currentShipSize) {
+    const aiCurrentHits = countAIHits();
+    if (aiCurrentHits == currentShipSize || destroyed) {
       destroyPlayerShip();
       markUnavailableCells();
       gamePhase.maxShips--;
