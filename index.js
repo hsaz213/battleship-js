@@ -1,7 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
-/* eslint-disable prefer-template */
-/* eslint-disable no-unused-expressions */
 let board = [];
 let ownBoard = [];
 //let maskedBoard=[];
@@ -284,7 +280,7 @@ function shipDetector() {
 }
 function aiShoot(originalData) {
   //
-  const aiCurrentHits = countAIHits();
+  let aiCurrentHits = countAIHits();
   if (gamePhase.phase === 'shooting' && gamePhase.attackTurn === 'ai') {
     if (aiCurrentHits === 0) {
       oldAiShoot();
@@ -294,36 +290,7 @@ function aiShoot(originalData) {
       thirdAiShoot();
     }
   }
-  /*
-    function: aiCurrentHits(), süllyedt=destroyPlayerShip()
-    globális... számláló a körbelövéshez, kiindulási mező a 2. 3. részhez, irány a 3. részhez
-
-    ha aiCurrentHits===0, akkor firstAiShoot(isOver)
-      ha süllyedt (itt: mező===1) destroyPlayerShip() vagy mező=x simán
-      ha nem süllyedt, de talált: mező[i][j]=[i][j]
-      return
-
-    ha aiCurrentHits===1: secondAiShoot(isOver,számláló,mező[i][j])
-
-      (ha nem: óramutató szerint pl. lőjön körbe körök alatt:
-      adott mező nem létezik: ugorjon a következőre még ezen a körön belül, ameddig létezőre nem jut (mert "láthatja" a táblát),
-      amikor létezőre jutott: lőjön oda):
-        ha nem talált: számláló ++, return
-
-        ha talált: számláló 0, irány megjegyez, return
-          (itt egy destroyPlayerShip-pel idáig már csak 1-2-es hajós mapon letesztelhető)
-
-    ha aiCurrentHits>1: thirdAiShoot(isOver,mező[i][j].irány)
-      ha adott irányban (kiindulási mező + aiCurrentHits). mező létezik és nem üres vagy miss:
-        oda lő és ha irány+1 ekkor létezik és üres vagy miss és kiindulási mező -irány - 1 nem létezik vagy üres vagy miss:
-        destroyPlayerShip()
-        return
-
-      ha nem létezik (kiindulási mező + aiCurrentHits). mező és/vagy kiindulási mező -irány - 1 nem üres vagy miss:
-        kiindulási mező -irány-ba lőjön addig, ameddig -irány -1 nem lenne üres vagy miss:
-        destroyPlayerShip()
-        return
-  */
+  aiCurrentHits = countAIHits();
 }
 function markUnavailableCells() {
   for (let i = 0; i < ownBoard.length; i++) {
@@ -415,8 +382,8 @@ function oldAiShoot() {
 }
 
 function secondAiShoot() {
-  x = Number(gamePhase.currentCell[0]);
-  y = Number(gamePhase.currentCell[1]);
+  let x = Number(gamePhase.currentCell[0]);
+  let y = Number(gamePhase.currentCell[1]);
   let hitShip2Long = false;
   //jobbra
   if (gamePhase.aiCounter === 0) {
@@ -430,7 +397,7 @@ function secondAiShoot() {
         ownBoard[x][y + 1] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
       } else {
-        if (ownBoard[x][y + 1] == 2) {
+        if (Number(ownBoard[x][y + 1]) === 2) {
           hitShip2Long = true;
         }
         ownBoard[x][y + 1] = 'h';
@@ -452,7 +419,7 @@ function secondAiShoot() {
         ownBoard[x + 1][y] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
       } else {
-        if (ownBoard[x + 1][y] == 2) {
+        if (Number(ownBoard[x + 1][y] === 2)) {
           hitShip2Long = true;
         }
         ownBoard[x + 1][y] = 'h';
@@ -474,7 +441,7 @@ function secondAiShoot() {
         ownBoard[x][y - 1] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
       } else {
-        if (ownBoard[x][y - 1] == 2) {
+        if (Number(ownBoard[x][y - 1]) === 2) {
           hitShip2Long = true;
         }
         ownBoard[x][y - 1] = 'h';
@@ -496,7 +463,7 @@ function secondAiShoot() {
         ownBoard[x - 1][y] = 'm';
         displayBoard({ boardnumber: 2, board: ownBoard });
       } else {
-        if (ownBoard[x - 1][y] == 2) {
+        if (Number(ownBoard[x - 1][y]) === 2) {
           hitShip2Long = true;
         }
         ownBoard[x - 1][y] = 'h';
@@ -517,23 +484,9 @@ function secondAiShoot() {
     gamePhase.maxShips--;
     gamePhase.aiCounter = 0;
     aiCurrentHits = 0;
-  }
-
-  //if over
-  const shipCount = shipDetector();
-  if (shipCount == 0) {
-    gamePhase.phase = 'end';
-    displayMessage(`AI wins`);
-  } else if (aiCurrentHits === 1) {
-    gamePhase.attackTurn = 'player';
-    displayTextMessage('Ai missed in secondAiShoot');
     displayMessage(`Player's turn`, 'black');
-    hitShip2Long = false;
-    aiCurrentHits = 0;
-  }
-
-  //secondAiShoot successful, move on to thirdAiShoot
-  else {
+    displayTextMessage('Ai hit in secondAiShoot');
+  } else {
     gamePhase.attackTurn = 'player';
     gamePhase.aiCounter = 0;
     displayMessage(`Player's turn`, 'black');
@@ -541,6 +494,12 @@ function secondAiShoot() {
     hitShip2Long = false;
     aiCurrentHits = 0;
   }
+  const shipCount = shipDetector();
+  if (shipCount == 0) {
+    gamePhase.phase = 'end';
+    displayMessage(`AI wins`);
+  }
+
   displayBoard({ boardnumber: 2, board: ownBoard });
 }
 
@@ -856,6 +815,7 @@ function thirdAiShoot() {
   displayBoard({ boardnumber: 2, board: ownBoard });
   //if over
   const shipCount = shipDetector();
+  let aiCurrentHits = countAIHits();
   if (shipCount == 0) {
     gamePhase.phase = 'end';
     displayMessage(`AI wins`);
