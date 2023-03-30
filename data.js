@@ -9,6 +9,5 @@ const data = {
   game8: 'size:3,s:{s1:a1b1,s2:c3}',
   game9: 'size:3,s:{s1:a1b1c1}',
   game10: 'size:4,s:{s1:a1b1c1d1}',
-  game11:
-    'size:10,s:{s1:a1b1c1d1e1f1g1,s2:a3b3c3d3e3f3g3,s3:a5b5c5d5e5f5g5,s4:a7b7c7d7e7f7g7,s5:a9b9c9d9e9f9g9}'
+  game11: 'size:7,s:{s1:a1b1c1d1e1,s2:a3b3c3d3e3,s3:a5b5c5d5e5,s4:a7b7c7d7e7}'
 };

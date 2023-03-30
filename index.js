@@ -675,6 +675,7 @@ function thirdAiShoot() {
       gamePhase.aiCounter = 0;
       console.log('destroyed1');
     }
+    gamePhase.attackTurn = 'player';
   }
 
   //changed direction
