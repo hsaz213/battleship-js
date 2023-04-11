@@ -388,10 +388,9 @@ function secondAiShoot() {
   //jobbra
   if (gamePhase.aiCounter === 0) {
     if (
-      (ownBoard[x][y + 1] &&
-        ownBoard[x][y + 1] !== 'n' &&
-        ownBoard[x][y + 1] !== 'm') ||
-      (ownBoard[x][y + 1] != undefined && ownBoard[x][y + 1] == '')
+      ownBoard[x][y + 1] &&
+      ownBoard[x][y + 1] !== 'n' &&
+      ownBoard[x][y + 1] !== 'm'
     ) {
       if (ownBoard[x][y + 1] == '') {
         ownBoard[x][y + 1] = 'm';
@@ -410,10 +409,9 @@ function secondAiShoot() {
   //le
   if (gamePhase.aiCounter === 1) {
     if (
-      (ownBoard[x + 1] &&
-        ownBoard[x + 1][y] !== 'n' &&
-        ownBoard[x + 1][y] !== 'm') ||
-      (ownBoard[x + 1] != undefined && ownBoard[x + 1][y] == '')
+      ownBoard[x + 1] &&
+      ownBoard[x + 1][y] !== 'n' &&
+      ownBoard[x + 1][y] !== 'm'
     ) {
       if (ownBoard[x + 1][y] == '') {
         ownBoard[x + 1][y] = 'm';
@@ -432,10 +430,9 @@ function secondAiShoot() {
   //balra
   if (gamePhase.aiCounter === 2) {
     if (
-      (ownBoard[x][y - 1] &&
-        ownBoard[x][y - 1] !== 'n' &&
-        ownBoard[x][y - 1] !== 'm') ||
-      (ownBoard[x][y - 1] != undefined && ownBoard[x][y - 1] == '')
+      ownBoard[x][y - 1] &&
+      ownBoard[x][y - 1] !== 'n' &&
+      ownBoard[x][y - 1] !== 'm'
     ) {
       if (ownBoard[x][y - 1] == '') {
         ownBoard[x][y - 1] = 'm';
@@ -454,10 +451,9 @@ function secondAiShoot() {
   //fel
   if (gamePhase.aiCounter === 3) {
     if (
-      (ownBoard[x - 1] &&
-        ownBoard[x - 1][y] !== 'n' &&
-        ownBoard[x - 1][y] !== 'm') ||
-      (ownBoard[x - 1] != undefined && ownBoard[x - 1][y] == '')
+      ownBoard[x - 1] &&
+      ownBoard[x - 1][y] !== 'n' &&
+      ownBoard[x - 1][y] !== 'm'
     ) {
       if (ownBoard[x - 1][y] == '') {
         ownBoard[x - 1][y] = 'm';
@@ -563,7 +559,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'd'
     ) {
       if (
-        ownBoard[x + gamePhase.aiCounter + 2][y] != undefined &&
         ownBoard[x + gamePhase.aiCounter + 2][y] != 'm' &&
         ownBoard[x + gamePhase.aiCounter + 2][y] != 'n' &&
         ownBoard[x + gamePhase.aiCounter + 2][y] != 'h'
@@ -595,7 +590,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'l'
     ) {
       if (
-        ownBoard[x][y - gamePhase.aiCounter - 2] != undefined &&
         ownBoard[x][y - gamePhase.aiCounter - 2] != 'm' &&
         ownBoard[x][y - gamePhase.aiCounter - 2] != 'n' &&
         ownBoard[x][y - gamePhase.aiCounter - 2] != 'h'
@@ -627,7 +621,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'u'
     ) {
       if (
-        ownBoard[x - gamePhase.aiCounter - 2][y] != undefined &&
         ownBoard[x - gamePhase.aiCounter - 2][y] != 'm' &&
         ownBoard[x - gamePhase.aiCounter - 2][y] != 'n' &&
         ownBoard[x - gamePhase.aiCounter - 2][y] != 'h'
@@ -683,7 +676,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'u'
     ) {
       if (
-        ownBoard[x - gamePhase.aiCounter - 1][y] != undefined &&
         ownBoard[x - gamePhase.aiCounter - 1][y] != 'm' &&
         ownBoard[x - gamePhase.aiCounter - 1][y] != 'n' &&
         ownBoard[x - gamePhase.aiCounter - 1][y] != 'h'
@@ -714,7 +706,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'l'
     ) {
       if (
-        ownBoard[x][y - gamePhase.aiCounter - 1] != undefined &&
         ownBoard[x][y - gamePhase.aiCounter - 1] != 'm' &&
         ownBoard[x][y - gamePhase.aiCounter - 1] != 'n' &&
         ownBoard[x][y - gamePhase.aiCounter - 1] != 'h'
@@ -745,7 +736,6 @@ function thirdAiShoot() {
       gamePhase.direction == 'd'
     ) {
       if (
-        ownBoard[x + gamePhase.aiCounter + 1][y] != undefined &&
         ownBoard[x + gamePhase.aiCounter + 1][y] != 'm' &&
         ownBoard[x + gamePhase.aiCounter + 1][y] != 'n' &&
         ownBoard[x + gamePhase.aiCounter + 1][y] != 'h'
